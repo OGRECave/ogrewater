@@ -240,32 +240,32 @@ namespace OgreWater
 				Ogre::Vector4 waterFogColor = mWater->getWaterFogColor();
 
 				bool colorUpdated = false;
-				if (mKeyboard->isKeyDown(OIS::KC_1))
+				if (mKeyboard->isKeyDown(OIS::KC_1) || mKeyboard->isKeyDown(OIS::KC_NUMPAD1))
 				{
 					waterFogColor.x -= 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_2))
+				if (mKeyboard->isKeyDown(OIS::KC_2) || mKeyboard->isKeyDown(OIS::KC_NUMPAD2))
 				{
 					waterFogColor.x += 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_3))
+				if (mKeyboard->isKeyDown(OIS::KC_3) || mKeyboard->isKeyDown(OIS::KC_NUMPAD3))
 				{
 					waterFogColor.y -= 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_4))
+				if (mKeyboard->isKeyDown(OIS::KC_4) || mKeyboard->isKeyDown(OIS::KC_NUMPAD4))
 				{
 					waterFogColor.y += 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_5))
+				if (mKeyboard->isKeyDown(OIS::KC_5) || mKeyboard->isKeyDown(OIS::KC_NUMPAD5))
 				{
 					waterFogColor.z -= 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_6))
+				if (mKeyboard->isKeyDown(OIS::KC_6) || mKeyboard->isKeyDown(OIS::KC_NUMPAD6))
 				{
 					waterFogColor.z += 0.1 * timeSinceLastFrame;
 					colorUpdated = true;
@@ -286,42 +286,42 @@ namespace OgreWater
 			{
 				Ogre::Vector4 materialVariables = mWater->getMaterialVariables();
 				bool materialUpdated = false;
-				if (mKeyboard->isKeyDown(OIS::KC_1))
+				if (mKeyboard->isKeyDown(OIS::KC_1) || mKeyboard->isKeyDown(OIS::KC_NUMPAD1))
 				{
 					materialVariables.x -= 0.1 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_2))
+				if (mKeyboard->isKeyDown(OIS::KC_2) || mKeyboard->isKeyDown(OIS::KC_NUMPAD2))
 				{
 					materialVariables.x += 0.1 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_3))
+				if (mKeyboard->isKeyDown(OIS::KC_3) || mKeyboard->isKeyDown(OIS::KC_NUMPAD3))
 				{
 					materialVariables.y -= 0.0001 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_4))
+				if (mKeyboard->isKeyDown(OIS::KC_4) || mKeyboard->isKeyDown(OIS::KC_NUMPAD4))
 				{
 					materialVariables.y += 0.0001 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_5))
+				if (mKeyboard->isKeyDown(OIS::KC_5) || mKeyboard->isKeyDown(OIS::KC_NUMPAD5))
 				{
 					materialVariables.z -= 0.001 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_6))
+				if (mKeyboard->isKeyDown(OIS::KC_6) || mKeyboard->isKeyDown(OIS::KC_NUMPAD6))
 				{
 					materialVariables.z += 0.001 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_7))
+				if (mKeyboard->isKeyDown(OIS::KC_7) || mKeyboard->isKeyDown(OIS::KC_NUMPAD7))
 				{
 					materialVariables.w -= 0.001 * timeSinceLastFrame;
 					materialUpdated = true;
 				}
-				if (mKeyboard->isKeyDown(OIS::KC_8))
+				if (mKeyboard->isKeyDown(OIS::KC_8) || mKeyboard->isKeyDown(OIS::KC_NUMPAD8))
 				{
 					materialVariables.w += 0.001 * timeSinceLastFrame;
 					materialUpdated = true;
@@ -332,6 +332,7 @@ namespace OgreWater
 					materialVariables.x = Ogre::Math::Clamp(materialVariables.x, 0.0, 1.0);
 					materialVariables.y = Ogre::Math::Clamp(materialVariables.y, 0.0, 1.0);
 					materialVariables.z = Ogre::Math::Clamp(materialVariables.z, 0.0, 1.0);
+					materialVariables.w = Ogre::Math::Clamp(materialVariables.w, 0.0, 1.0);
 
 					mWater->setMaterialVariables(materialVariables);
 				}
