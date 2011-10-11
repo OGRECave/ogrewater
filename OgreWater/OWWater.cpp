@@ -36,19 +36,19 @@ THE SOFTWARE.
 namespace OgreWater
 {
 	Water::Water(const Ogre::RenderWindow * window, Ogre::SceneManager * sceneMgr, Ogre::Camera * camera)
-		: mWindow(window),
-		mSceneMgr(sceneMgr),
-		mCamera(camera),
-		mReflectionPlane(Ogre::Vector3(0.0, 1.0, 0.0), 200.0),
-		mReflectionClipPlaneAbove(Ogre::Vector3(0.0, 1.0, 0.0), 198.0),
-		mReflectionClipPlaneBelow(Ogre::Vector3(0.0, -1.0, 0.0), -202.0),
-		mRefractionClipPlaneAbove(Ogre::Vector3(0.0, -1.0, 0.0), -202.0),
-		mRefractionClipPlaneBelow(Ogre::Vector3(0.0, 1.0, 0.0), 198.0),
-		mInDepthPass(true),
-		mAboveSurface(true),
-		mWaterDustEnabled(false),
-		mAirBubblesEnabled(false)
-
+		: mWindow(window)
+		, mSceneMgr(sceneMgr)
+		, mCamera(camera)
+		, mReflectionPlane(Ogre::Vector3(0.0, 1.0, 0.0), 200.0)
+		, mReflectionClipPlaneAbove(Ogre::Vector3(0.0, 1.0, 0.0), 198.0)
+		, mReflectionClipPlaneBelow(Ogre::Vector3(0.0, -1.0, 0.0), -202.0)
+		, mRefractionClipPlaneAbove(Ogre::Vector3(0.0, -1.0, 0.0), -202.0)
+		, mRefractionClipPlaneBelow(Ogre::Vector3(0.0, 1.0, 0.0), 198.0)
+		, mInDepthPass(true)
+		, mAboveSurface(true)
+		, mWaterDustEnabled(false)
+		, mAirBubblesEnabled(false)
+		, mWaterPlaneEntity(0)
 	{
 		mWaterFogColor = Ogre::Vector4(0.0, 0.0, 0.0, 1.0);
 		mMaterialVariables = Ogre::Vector4(
@@ -225,8 +225,17 @@ namespace OgreWater
 		Ogre::Technique * fogTechnique = fogMaterial->getBestTechnique();
 		mFogPass = fogTechnique->getPass(0);
 
-		//mAnimatedMesh = new AnimatedMesh("WaterMesh", 10, 100, 100);
-		mWaterPlaneEntity = mSceneMgr->createEntity(Ogre::SceneManager::PT_PLANE);
+		if (mWaterPlaneEntity == 0)
+		{
+			//mAnimatedMesh = new AnimatedMesh("WaterMesh", 10, 100, 100);
+			mWaterPlaneEntity = mSceneMgr->createEntity(Ogre::SceneManager::PT_PLANE);
+
+			mWaterPlaneNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+			mWaterPlaneNode->setPosition(0.0, 200.0, 0.0);
+			mWaterPlaneNode->setScale(100 * Ogre::Vector3::UNIT_SCALE);
+			mWaterPlaneNode->pitch(Ogre::Degree(-90));
+			mWaterPlaneNode->attachObject(mWaterPlaneEntity);
+		}
 
 		mWaterPlaneEntity->setMaterialName("OgreWater/Water/Above");
 		for (unsigned int i = 0; i < mWaterPlaneEntity->getNumSubEntities(); i++)
@@ -235,17 +244,49 @@ namespace OgreWater
 			mWaterPlaneEntity->getSubEntity(i)->setCustomParameter(1, mMaterialVariables);
 		}
 
-		mWaterPlaneNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-		mWaterPlaneNode->setPosition(0.0, 200.0, 0.0);
-		mWaterPlaneNode->setScale(100 * Ogre::Vector3::UNIT_SCALE);
-		mWaterPlaneNode->pitch(Ogre::Degree(-90));
-		mWaterPlaneNode->attachObject(mWaterPlaneEntity);
-
 		// Set up Compositor
 		mWaterFogCompositorInstance = Ogre::CompositorManager::getSingleton().addCompositor(mCamera->getViewport(), "OgreWater/PostProcessingFog");
 		mWaterFogCompositorInstance->addListener(this);
 
 		mSceneMgr->getRenderQueue()->setRenderableListener(this);
+
+		aboveSurfaceRefractionMatrix =
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.0, 0, 200,
+					0, 0, 1, 0,
+					0, 0, 0, 1) *
+					
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.0/1.33, 0, 0,
+					0, 0, 1, 0,
+					0, 0, 0, 1) *
+
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.0, 0, -200,
+					0, 0, 1, 0,
+					0, 0, 0, 1);
+
+		belowSurfaceRefractionMatrix =
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.0, 0, 200,
+					0, 0, 1, 0,
+					0, 0, 0, 1) *
+
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.33, 0, 0,
+					0, 0, 1, 0,
+					0, 0, 0, 1) *
+
+				Ogre::Matrix4(
+					1, 0, 0, 0,
+					0, 1.0, 0, -200,
+					0, 0, 1, 0,
+					0, 0, 0, 1);
 	}
 
 	void Water::update(Ogre::Real timeSinceLastFrame)
@@ -352,28 +393,11 @@ namespace OgreWater
 			}
 			else
 			{
-				//// Update refraction camera view matrix 
-				//Ogre::Matrix4 refractionViewMatrix = mCamera->getViewMatrix();
+				// Update refraction camera view matrix
+				Ogre::Matrix4 viewMatrix(mCamera->getViewMatrix() * aboveSurfaceRefractionMatrix);
 
-				//Ogre::Matrix4 preScalingTranslateMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.0, 0, -200,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//Ogre::Matrix4 scalingMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.0/1.33, 0, 0,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//Ogre::Matrix4 postScalingTranslateMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.0, 0, 200,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//mRefractionCamera->setCustomViewMatrix(true, refractionViewMatrix * postScalingTranslateMatrix * scalingMatrix * preScalingTranslateMatrix);
+				mRefractionCamera->setCustomViewMatrix(true, viewMatrix);
+				mRefractionDepthCamera->setCustomViewMatrix(true, viewMatrix);
 			}
 		}
 		else
@@ -405,29 +429,11 @@ namespace OgreWater
 			}
 			else
 			{
-				//// Update refraction camera view matrix 
-				//Ogre::Matrix4 refractionViewMatrix = mCamera->getViewMatrix();
+				// Update refraction camera view matrix 
+				Ogre::Matrix4 refractionViewMatrix = mCamera->getViewMatrix() * belowSurfaceRefractionMatrix;
 
-				//Ogre::Matrix4 preScalingTranslateMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.0, 0, -200,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//Ogre::Matrix4 scalingMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.33, 0, 0,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//Ogre::Matrix4 postScalingTranslateMatrix = Ogre::Matrix4(
-				//	1, 0, 0, 0,
-				//	0, 1.0, 0, 200,
-				//	0, 0, 1, 0,
-				//	0, 0, 0, 1);
-
-				//mRefractionCamera->setCustomViewMatrix(true, refractionViewMatrix * postScalingTranslateMatrix * scalingMatrix * preScalingTranslateMatrix);
-				//mRefractionDepthCamera->setCustomViewMatrix(true, refractionViewMatrix * postScalingTranslateMatrix * scalingMatrix * preScalingTranslateMatrix);
+				mRefractionCamera->setCustomViewMatrix(true, refractionViewMatrix);
+				mRefractionDepthCamera->setCustomViewMatrix(true, refractionViewMatrix);
 			}
 		}
 	}

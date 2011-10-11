@@ -44,6 +44,10 @@ namespace OgreWater
 		Ogre::String mResourcesCfg;
 		Ogre::RenderWindow* mWindow;
 
+		// Camera
+		Ogre::SceneNode * mCameraPosition;
+		Ogre::SceneNode * mCameraPitch;
+
 		Water * mWater;
 
 		Ogre::SceneManager* mSceneMgr;

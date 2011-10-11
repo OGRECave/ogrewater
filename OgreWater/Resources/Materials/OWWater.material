@@ -58,11 +58,13 @@ material OgreWater/Water/Above
             texture_unit
             {
                 texture ReflectionDepthTexture
+				tex_address_mode mirror
             }
 
             texture_unit
             {
                 texture RefractionDepthTexture
+				tex_address_mode mirror
             }
 
 			texture_unit

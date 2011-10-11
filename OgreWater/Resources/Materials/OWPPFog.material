@@ -41,20 +41,22 @@ material OgreWater/PostProcessingFog
 			texture_unit Scene
 			{
                 tex_coord_set 0
-				tex_address_mode clamp
+				tex_address_mode mirror
 				filtering linear linear linear
 			}
 
 			texture_unit RT
 			{
                 tex_coord_set 0
-				tex_address_mode clamp
+				tex_address_mode mirror
 				filtering linear linear linear
 			}
 
 			texture_unit SceneDepthTexture
 			{
 				texture SceneDepthTexture
+				tex_address_mode mirror
+				filtering linear linear linear
 			}
 		}
 	}

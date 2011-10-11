@@ -116,14 +116,14 @@ namespace OgreWater
 		mSceneMgr = mRoot->createSceneManager("DefaultSceneManager");
 		mSceneMgr->setSkyDome(true, "Examples/CloudySky", 10.0, 8.0, 1000000000.0);
 
+		mCameraPosition = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+		mCameraPitch = mCameraPosition->createChildSceneNode();
+
 		// Create the camera
 		mCamera = mSceneMgr->createCamera("Camera");
-		mCamera->setFixedYawAxis(true);
+		mCameraPitch->attachObject(mCamera);
 
-		// Position it at 500 in Z direction
-		mCamera->setPosition(Ogre::Vector3(0,500,500));
-		// Look back along -Z
-		mCamera->lookAt(Ogre::Vector3(0,0,0));
+		mCameraPosition->setPosition(Ogre::Vector3(0,500,500));
 		mCamera->setNearClipDistance(1);
 		mCamera->setFarClipDistance(0);
 
@@ -338,36 +338,36 @@ namespace OgreWater
 				}
 			}
 
-			Ogre::Vector3 cameraPosition = mCamera->getPosition();
+			Ogre::Vector3 cameraPosition = mCameraPosition->getPosition();
 			if (mKeyboard->isKeyDown(OIS::KC_A))
 			{
-				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * -mCamera->getRight();
+				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * -mCamera->getDerivedRight();
 			}
 			if (mKeyboard->isKeyDown(OIS::KC_D))
 			{
-				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * mCamera->getRight();
+				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * mCamera->getDerivedRight();
 			}
 			if (mKeyboard->isKeyDown(OIS::KC_W))
 			{
-				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * mCamera->getDirection();
+				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * mCamera->getDerivedDirection();
 			}
 			if (mKeyboard->isKeyDown(OIS::KC_S))
 			{
-				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * -mCamera->getDirection();
+				cameraPosition = cameraPosition + 100 * timeSinceLastFrame * -mCamera->getDerivedDirection();
 			}
-			mCamera->setPosition(cameraPosition);
+			mCameraPosition->setPosition(cameraPosition);
 
 			if (mKeyboard->isKeyDown(OIS::KC_Q))
 			{
-				mCamera->roll(10 * timeSinceLastFrame * Ogre::Degree(1));
+				mCameraPosition->roll(10 * timeSinceLastFrame * Ogre::Degree(1));
 			}
 			if (mKeyboard->isKeyDown(OIS::KC_E))
 			{
-				mCamera->roll(10 * timeSinceLastFrame * Ogre::Degree(-1));
+				mCameraPosition->roll(10 * timeSinceLastFrame * Ogre::Degree(-1));
 			}
 
-			mCamera->yaw(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().X.rel));
-			mCamera->pitch(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().Y.rel));
+			mCameraPosition->yaw(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().X.rel));
+			mCameraPitch->pitch(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().Y.rel));
 
 			mWater->update(timeSinceLastFrame);
 

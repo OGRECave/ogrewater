@@ -29,6 +29,8 @@ uniform sampler2D normalTexture : register(s4);
 uniform float waterFogDensity = 10.0;
 uniform float4 waterColor = float4(0.0, 1.0, 0.0, 1.0);
 
+static const float PI_HALF = 1.5707963267948965;
+
 struct VS_INPUT
 {
 	float4 position : POSITION;
@@ -109,26 +111,35 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	float3 normalizedViewDirection = normalize(input.viewDirection);
 	float3 normalizedViewDirectionTS = normalize(input.viewDirectionTS);
 	
+	/*
 	float3 normal1 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x + 0.5 * time, input.texCoord.y)) - 1.0);
 	float3 normal2 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x, input.texCoord.y + 0.5 * time)) - 1.0);
 	float3 normal3 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x - 0.5 * time, input.texCoord.y + 0.0005)) - 1.0);
 	float3 normal4 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x + 0.005, input.texCoord.y - 0.5 * time)) - 1.0);
+	float3 normal = normalize(normal1 + normal2 + normal3 + normal4);
+	*/
+
+	float3 normal1 = normalize(2 * tex2D(normalTexture, 25 * float2(input.texCoord.x, input.texCoord.y - 0.2 * time)) - 1.0);
+	float3 normal2 = normalize(2 * tex2D(normalTexture, 25 * float2(input.texCoord.y, 1.0 - input.texCoord.x - 0.2 * time)) - 1.0);
+	float3 normal3 = normalize(2 * tex2D(normalTexture, 25 * float2(1.0 - input.texCoord.x, 1.0 - input.texCoord.y - 0.2 * time)) - 1.0);
+	float3 normal4 = normalize(2 * tex2D(normalTexture, 25 * float2(1.0 - input.texCoord.y, input.texCoord.x - 0.2 * time)) - 1.0);
+
 	float3 normal = normalize(normal1 + normal2 + normal3 + normal4);
 
 	//float3 normal = normalize(input.normal);
 
 	float reflection = tex2D(reflectionDepthTexture, float2(xCoord, yCoord)).r;
 	float reflectionDepth = reflection - length(input.positionWS - cameraPosition);
-	if (reflection == 0.0 || reflectionDepth > 1000.0)
+	if (reflection == 0.0 || reflectionDepth > 500.0)
 	{
-		reflectionDepth = 1000.0;
+		reflectionDepth = 500.0;
 	}
 
 	float refraction = tex2D(refractionDepthTexture, float2(xCoord, yCoord)).r;
 	float refractionDepth = refraction - length(input.positionWS - cameraPosition);
-	if (refraction == 0.0)
+	if (refraction == 0.0 || refractionDepth > 500.0)
 	{
-		refractionDepth = 1000.0;
+		refractionDepth = 500.0;
 	}
 
 	float2 reflectionTexCoord = float2(xCoord, yCoord) + (normal.xy * reflectionDepth * materialVariables.x) / length(input.positionWS - cameraPosition);
@@ -156,40 +167,50 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	float specular = 0;
 
 	float3 light = normalize(input.lightDirection);
-	if (aboveSurface)
+	if (aboveSurface && reflection <= 0.0)
 	{
 		float3 half = -normalize(light + normalizedViewDirection);
-		specular = pow(saturate(dot(normal, half)), 250);
+		specular = pow(saturate(dot(normal, half)), 100);
 	}
 	else if (!aboveSurface && refraction <= 0.0)
 	{
 		// If below surface, mirror light direction in z plane
 		light.z = -light.z;
 		float3 half = -normalize(light + normalizedViewDirection);
-		specular = pow(saturate(dot(-normal, half)), 250);
+		specular = pow(saturate(dot(-normal, half)), 100);
 	}
 
 	float phi1 = 0.0;
+	float sinPhi2 = 0.0;
+	float phi2 = 0.0;
 	
 	if (aboveSurface)
 	{
 		phi1 = acos(dot(-normalizedViewDirection, normal));
+		phi2 = asin((1/1.33) * sin(phi1));
 	}
 	else
 	{
 		phi1 = acos(dot(-normalizedViewDirection, -normal));
+		sinPhi2 = 1.33 * sin(phi1);
+		phi2 = asin(sinPhi2);
 	}
 
-	float phi2 = asin((1/1.33) * sin(phi1));
+	float R = 0.0;
+	float T = 0.0;
 
-	float R = saturate(
-		pow(
-			(sin(phi1 - phi2) / sin(phi1 + phi2)),
-			2) +
-		pow(
-			(tan(phi1 - phi2) / tan(phi1 + phi2)),
-			2));
-	float T = 1.0 - R;
+	if (!aboveSurface && sinPhi2 > 1.0)
+	{
+		R = 1.0;
+		T = 0.0;
+	}
+	else
+	{
+		R = saturate(
+			pow((sin(phi1 - phi2) / sin(phi1 + phi2)), 2) +
+			pow((tan(phi1 - phi2) / tan(phi1 + phi2)), 2));
+		T = 1.0 - R;
+	}
 
 	if (aboveSurface)
 	{
@@ -200,7 +221,7 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	else
 	{
 		// Below the surface, fog the reflection color
-		float f = 1 / exp(pow(reflectionDepth * materialVariables.z, 2));
+		float f = 1 / exp(pow((reflectionDepth + length(input.positionWS - cameraPosition)) * materialVariables.z, 2));
 		reflectionColor = f * reflectionColor + (1-f) * waterFogColor;
 	}
 

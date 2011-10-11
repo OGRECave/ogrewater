@@ -126,6 +126,9 @@ namespace OgreWater
 
 		bool mWaterDustEnabled;
 		bool mAirBubblesEnabled;
+
+		Ogre::Matrix4 aboveSurfaceRefractionMatrix;
+		Ogre::Matrix4 belowSurfaceRefractionMatrix;
 	};
 }
 
