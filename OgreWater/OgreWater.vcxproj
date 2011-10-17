@@ -112,6 +112,7 @@ copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Compositors\OWPPFog.compositor" />
+    <None Include="Resources\Materials\OWCaustics.material" />
     <None Include="Resources\Materials\OWDepth.material" />
     <None Include="Resources\Materials\OWFog.material" />
     <None Include="Resources\Materials\OWPPFog.material" />
@@ -122,6 +123,7 @@ copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\
     <None Include="Resources\Materials\OWWaterDustDepth.material" />
     <None Include="Resources\Particles\OWAirBubbles.particle" />
     <None Include="Resources\Particles\OWWaterDust.particle" />
+    <None Include="Resources\Programs\OWCaustics.program" />
     <None Include="Resources\Programs\OWDepth.program" />
     <None Include="Resources\Programs\OWFog.program" />
     <None Include="Resources\Programs\OWPPFog.program" />
@@ -129,6 +131,7 @@ copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\
     <None Include="Resources\Programs\OWPPVerticalBlur.program" />
     <None Include="Resources\Programs\OWWater.program" />
     <None Include="Resources\Programs\OWWaterDustDepth.program" />
+    <None Include="Resources\Shaders\OWCaustics.hlsl" />
     <None Include="Resources\Shaders\OWDepth.hlsl" />
     <None Include="Resources\Shaders\OWFog.hlsl" />
     <None Include="Resources\Shaders\OWPPHorizontalBlur.hlsl" />

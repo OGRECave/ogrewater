@@ -26,9 +26,6 @@ uniform sampler2D reflectionDepthTexture : register(s2);
 uniform sampler2D refractionDepthTexture : register(s3);
 uniform sampler2D normalTexture : register(s4);
 
-uniform float waterFogDensity = 10.0;
-uniform float4 waterColor = float4(0.0, 1.0, 0.0, 1.0);
-
 static const float PI_HALF = 1.5707963267948965;
 
 struct VS_INPUT
@@ -36,31 +33,28 @@ struct VS_INPUT
 	float4 position : POSITION;
 	float3 normal	: NORMAL;
 	float3 tangent	: TANGENT;
-	float2 texCoord : TEXCOORD0;
 };
 
 struct VS_OUTPUT
 {
 	float4 position			: POSITION;
 	float3 normal			: NORMAL;
-	float2 texCoord			: TEXCOORD0;
+	float3 positionWS		: TEXCOORD0;
 	float3 viewDirection	: TEXCOORD1;
 	float3 viewDirectionTS	: TEXCOORD2;
 	float3 lightDirection	: TEXCOORD3;
 	float3 lightDirectionTS	: TEXCOORD4;
-	float3 positionWS		: TEXCOORD5;
 };
 
 struct PS_INPUT
 {
 	float2 screenPos		: VPOS;
 	float3 normal			: NORMAL;
-	float2 texCoord			: TEXCOORD0;
+	float3 positionWS		: TEXCOORD0;
 	float3 viewDirection	: TEXCOORD1;
 	float3 viewDirectionTS	: TEXCOORD2;
 	float3 lightDirection	: TEXCOORD3;
 	float3 lightDirectionTS	: TEXCOORD4;
-	float3 positionWS		: TEXCOORD5;
 };
 
 struct PS_OUTPUT
@@ -77,8 +71,8 @@ VS_OUTPUT main_vp(VS_INPUT input,
 	VS_OUTPUT output;
 
 	output.position = mul(worldViewProj, input.position);
+	output.positionWS = mul(world, input.position);
 	output.normal = input.normal;
-	output.texCoord = input.texCoord;
 	output.viewDirection = input.position - cameraPosition;
 	output.lightDirection = lightDirection;
 
@@ -88,8 +82,6 @@ VS_OUTPUT main_vp(VS_INPUT input,
 	objectToTangentSpace[2] = input.normal;
 	output.lightDirectionTS = mul(objectToTangentSpace, lightDirection);
 	output.viewDirectionTS = mul(objectToTangentSpace, output.viewDirection);
-
-	output.positionWS = mul(world, input.position);
 
 	return output;
 }
@@ -103,7 +95,10 @@ PS_OUTPUT main_fp(PS_INPUT input,
 {
 	PS_OUTPUT output;
 
-	bool aboveSurface = (cameraPosition.y >= 200);
+	float waterHeight = waterFogColor.a;
+	waterFogColor.a = 1.0;
+
+	bool aboveSurface = (cameraPosition.y >= waterHeight);
 
 	float xCoord = (input.screenPos.x + 0.5) / viewportSize.x;
 	float yCoord = (input.screenPos.y + 0.5) / viewportSize.y;
@@ -111,20 +106,16 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	float3 normalizedViewDirection = normalize(input.viewDirection);
 	float3 normalizedViewDirectionTS = normalize(input.viewDirectionTS);
 	
-	/*
-	float3 normal1 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x + 0.5 * time, input.texCoord.y)) - 1.0);
-	float3 normal2 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x, input.texCoord.y + 0.5 * time)) - 1.0);
-	float3 normal3 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x - 0.5 * time, input.texCoord.y + 0.0005)) - 1.0);
-	float3 normal4 = normalize(2 * tex2D(normalTexture, 10 * float2(input.texCoord.x + 0.005, input.texCoord.y - 0.5 * time)) - 1.0);
-	float3 normal = normalize(normal1 + normal2 + normal3 + normal4);
-	*/
+	float3 normal = float3(0.0, 0.0, 0.0);
 
-	float3 normal1 = normalize(2 * tex2D(normalTexture, 25 * float2(input.texCoord.x, input.texCoord.y - 0.2 * time)) - 1.0);
-	float3 normal2 = normalize(2 * tex2D(normalTexture, 25 * float2(input.texCoord.y, 1.0 - input.texCoord.x - 0.2 * time)) - 1.0);
-	float3 normal3 = normalize(2 * tex2D(normalTexture, 25 * float2(1.0 - input.texCoord.x, 1.0 - input.texCoord.y - 0.2 * time)) - 1.0);
-	float3 normal4 = normalize(2 * tex2D(normalTexture, 25 * float2(1.0 - input.texCoord.y, input.texCoord.x - 0.2 * time)) - 1.0);
+	float2 texCoord = 0.001 * input.positionWS.xz;
 
-	float3 normal = normalize(normal1 + normal2 + normal3 + normal4);
+	normal = normalize(2 * tex2D(normalTexture, float2(texCoord.x, texCoord.y - 5 * time)) - 1.0);
+	normal += normalize(2 * tex2D(normalTexture, float2(texCoord.y, 1.0 - texCoord.x - 5 * time)) - 1.0);
+	normal += normalize(2 * tex2D(normalTexture, float2(1.0 - texCoord.x, 1.0 - texCoord.y - 5 * time)) - 1.0);
+	normal += normalize(2 * tex2D(normalTexture, float2(1.0 - texCoord.y, texCoord.x - 5 * time)) - 1.0);
+
+	normal = normalize(normal);
 
 	//float3 normal = normalize(input.normal);
 

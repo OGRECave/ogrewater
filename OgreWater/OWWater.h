@@ -53,6 +53,10 @@ namespace OgreWater
 		void setAirBubblesEnabled(bool isEnabled);
 		bool getAirBubblesEnabled() { return mAirBubblesEnabled; }
 
+		void setWaterEntity(Ogre::Entity * entity);
+		void setWaterHeight(Ogre::Real height);
+		Ogre::Real getWaterHeight() { return mWaterHeight; }
+
 		void _writeTexturesToFile();
 
 	protected:
@@ -71,10 +75,14 @@ namespace OgreWater
 		void createAirBubbles();
 		void destroyAirBubbles();
 
+		void updateRefractionMatrices();
+
 		const Ogre::RenderWindow * mWindow;
 		Ogre::SceneManager * mSceneMgr;
 		Ogre::Camera * mCamera;
 
+		Ogre::Real mWaterHeight;
+		
 		// Shader variables
 		Ogre::Vector4 mWaterFogColor;
 		Ogre::Vector4 mMaterialVariables;
@@ -109,11 +117,13 @@ namespace OgreWater
 
 		Ogre::Technique * mDepthTechnique;
 		Ogre::Technique * mWaterDustDepthTechnique;
+		Ogre::Technique * mCausticsTechnique;
 		Ogre::Pass * mFogPass;
 		bool mInDepthPass;
 
 		bool mAboveSurface;
 		bool mInRenderTextureUpdate;
+		bool mInRefractionTextureUpdate;
 
 		Ogre::CompositorInstance * mWaterFogCompositorInstance;
 		Ogre::ParticleSystem * mWaterDustParticleSystem;

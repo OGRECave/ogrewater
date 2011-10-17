@@ -135,16 +135,8 @@ namespace OgreWater
 		mCamera->setAspectRatio(
 			Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
-		mWater = new Water(mWindow, mSceneMgr, mCamera);
-		mWater->setWaterDustEnabled(true);
-		//mWater->setAirBubblesEnabled(true);
-		mWater->init();
-
-		// Set ambient light
-		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-
 		// Create a light
-		Ogre::Vector3 lightDir(0.55, -0.3, 0.75);
+		Ogre::Vector3 lightDir(0.0, -1.0, 0.0);
 		lightDir.normalise();
 
 		Ogre::Light* light = mSceneMgr->createLight("MainLight");
@@ -184,6 +176,13 @@ namespace OgreWater
 		}
 
 		mTerrainGroup->freeTemporaryResources();
+
+		// Create water
+		mWater = new Water(mWindow, mSceneMgr, mCamera);
+		mWater->setWaterDustEnabled(true);
+		//mWater->setAirBubblesEnabled(true);
+		mWater->init();
+		// mWater->setWaterHeight(300.0);
 
 		// Initialize OIS
 		Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
@@ -278,6 +277,15 @@ namespace OgreWater
 					waterFogColor.z = Ogre::Math::Clamp(waterFogColor.z, 0.0, 1.0);
 
 					mWater->setWaterFogColor(waterFogColor);
+				}
+
+				if (mKeyboard->isKeyDown(OIS::KC_7) || mKeyboard->isKeyDown(OIS::KC_NUMPAD7))
+				{
+					mWater->setWaterHeight(mWater->getWaterHeight() - 10.0 * timeSinceLastFrame);
+				}
+				if (mKeyboard->isKeyDown(OIS::KC_8) || mKeyboard->isKeyDown(OIS::KC_NUMPAD8))
+				{
+					mWater->setWaterHeight(mWater->getWaterHeight() + 10.0 * timeSinceLastFrame);
 				}
 			}
 

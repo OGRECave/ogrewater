@@ -133,5 +133,14 @@
     <None Include="Resources\Shaders\OWPPVerticalBlur.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Resources\Materials\OWCaustics.material">
+      <Filter>Resource Files\Materials</Filter>
+    </None>
+    <None Include="Resources\Programs\OWCaustics.program">
+      <Filter>Resource Files\Programs</Filter>
+    </None>
+    <None Include="Resources\Shaders\OWCaustics.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
