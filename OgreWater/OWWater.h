@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include <OgreRenderTargetListener.h>
 #include <OgreCompositorInstance.h>
 
+#include <map>
+
 namespace OgreWater
 {
 	class Water
@@ -37,7 +39,7 @@ namespace OgreWater
 		, public Ogre::RenderQueue::RenderableListener
 	{
 	public:
-		Water(const Ogre::RenderWindow * window, Ogre::SceneManager * sceneMgr, Ogre::Camera * camera);
+		Water(Ogre::RenderWindow * window, Ogre::SceneManager * sceneMgr, Ogre::Camera * camera);
 		~Water();
 		void init();
 		void update(Ogre::Real timeSinceLastFrame);
@@ -62,7 +64,7 @@ namespace OgreWater
 	protected:
 		// Ogre::RenderTargetListener
 		void preRenderTargetUpdate(const Ogre::RenderTargetEvent &evt);
-		void postRenderTargetUpdate(const Ogre::RenderTargetEvent &evt);
+		//void postRenderTargetUpdate(const Ogre::RenderTargetEvent &evt);
 		// Ogre::CompositorInstance::Listener
 		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat);
 		// Ogre::RenderQueue::RenderableListener
@@ -77,7 +79,7 @@ namespace OgreWater
 
 		void updateRefractionMatrices();
 
-		const Ogre::RenderWindow * mWindow;
+		Ogre::RenderWindow * mWindow;
 		Ogre::SceneManager * mSceneMgr;
 		Ogre::Camera * mCamera;
 
@@ -123,6 +125,7 @@ namespace OgreWater
 
 		bool mAboveSurface;
 		bool mInRenderTextureUpdate;
+		bool mInReflectionTextureUpdate;
 		bool mInRefractionTextureUpdate;
 
 		Ogre::CompositorInstance * mWaterFogCompositorInstance;
@@ -139,6 +142,9 @@ namespace OgreWater
 
 		Ogre::Matrix4 aboveSurfaceRefractionMatrix;
 		Ogre::Matrix4 belowSurfaceRefractionMatrix;
+
+		typedef std::map<Ogre::String, Ogre::MaterialPtr> CausticsMaterialMap;
+		CausticsMaterialMap mCausticsMaterialMap;
 	};
 }
 

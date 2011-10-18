@@ -27,7 +27,7 @@ material OgreWater/Caustics
         pass CausticsPass
         {
 			scene_blend add
-			depth_bias 1 1
+			depth_bias 1
 
 			vertex_program_ref OgreWater/Caustics/Vertex
 			{

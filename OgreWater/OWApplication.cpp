@@ -105,7 +105,7 @@ namespace OgreWater
 			return false;
 		}
 
-		mWindow = mRoot->initialise(true, "OgreWater Demo");
+		mWindow = mRoot->initialise(true, "OgreWater Demo v. 1.1");
 
 		// Set default mipmap level (NB some APIs ignore this)
 		Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
@@ -175,6 +175,7 @@ namespace OgreWater
 			}
 		}
 
+		mTerrainGroup->update(true);
 		mTerrainGroup->freeTemporaryResources();
 
 		// Create water
@@ -182,7 +183,7 @@ namespace OgreWater
 		mWater->setWaterDustEnabled(true);
 		//mWater->setAirBubblesEnabled(true);
 		mWater->init();
-		// mWater->setWaterHeight(300.0);
+		mWater->setWaterHeight(300.0);
 
 		// Initialize OIS
 		Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
@@ -206,11 +207,14 @@ namespace OgreWater
 		Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
 		Ogre::Timer timer;
+		Ogre::Real timeSinceStart = 0.0;
 
 		while(true)
 		{
 			Ogre::Real timeSinceLastFrame = 0.000001 * timer.getMicroseconds();
 			timer.reset();
+
+			timeSinceStart += timeSinceLastFrame;
 
 			// Pump window messages for nice behaviour
 			Ogre::WindowEventUtilities::messagePump();
@@ -377,6 +381,10 @@ namespace OgreWater
 			mCameraPosition->yaw(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().X.rel));
 			mCameraPitch->pitch(10 * timeSinceLastFrame * Ogre::Degree(-mMouse->getMouseState().Y.rel));
 
+			Ogre::Vector3 lightDir(Ogre::Math::Sin(0.1 * timeSinceStart), -0.5, 0.0);
+			lightDir.normalise();
+			light->setDirection(lightDir);
+
 			mWater->update(timeSinceLastFrame);
 
 			// Render a frame
@@ -421,7 +429,7 @@ namespace OgreWater
 		// Configure global
 		mTerrainGlobals->setMaxPixelError(2.0);
 		// testing composite map
-		mTerrainGlobals->setCompositeMapDistance(30000);
+		mTerrainGlobals->setCompositeMapDistance(10000);
 
 		// Important to set these so that the terrain knows what to use for derived (non-realtime) data
 		mTerrainGlobals->setLightMapDirection(light->getDerivedDirection());
@@ -491,8 +499,8 @@ namespace OgreWater
 		}
 		blendMap0->dirty();
 		blendMap1->dirty();
-		blendMap0->update();
-		blendMap1->update();
+		blendMap0->getParent()->updateCompositeMap();
+		blendMap1->getParent()->updateCompositeMap();
 	}
 
 	void Application::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)

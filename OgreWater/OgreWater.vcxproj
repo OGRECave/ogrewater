@@ -51,21 +51,21 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Components\Terrain\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Dependencies\include;C:\Users\Anders\Source-VS2010\boost_1_44_0;C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\OgreMain\include;C:\Users\Anders\Source-VS2010\libnoise\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Components\Terrain\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Dependencies\include;C:\Users\Anders\Source-VS2010\boost_1_47_0;C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\OgreMain\include;C:\Users\Anders\Source-VS2010\libnoise\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Dependencies\lib\$(Configuration);C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\lib\$(Configuration);C:\Users\Anders\Source-VS2010\boost_1_44_0\stage\lib;C:\Users\Anders\Source-VS2010\libnoise\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Dependencies\lib\$(Configuration);C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\lib\$(Configuration);C:\Users\Anders\Source-VS2010\boost_1_47_0\stage\lib;C:\Users\Anders\Source-VS2010\libnoise\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>OgreMain_d.lib;OgreTerrain_d.lib;OIS_d.lib;libnoise_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\$(Configuration)\OgreWater.exe" "C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\bin\$(Configuration)"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Materials" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Shaders" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\programs"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Programs" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Compositors" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Particles" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\particle"</Command>
+      <Command>copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\$(Configuration)\OgreWater.exe" "C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\bin\$(Configuration)"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Materials" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Shaders" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\programs"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Programs" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Compositors" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Particles" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\particle"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -77,23 +77,23 @@ copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Components\Terrain\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Dependencies\include;C:\Users\Anders\Source-VS2010\boost_1_44_0;C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\OgreMain\include;C:\Users\Anders\Source-VS2010\libnoise\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Components\Terrain\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Dependencies\include;C:\Users\Anders\Source-VS2010\boost_1_47_0;C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\include;C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\OgreMain\include;C:\Users\Anders\Source-VS2010\libnoise\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Dependencies\lib\$(Configuration);C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\lib\$(Configuration);C:\Users\Anders\Source-VS2010\boost_1_44_0\stage\lib;C:\Users\Anders\Source-VS2010\libnoise\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Dependencies\lib\$(Configuration);C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\lib\$(Configuration);C:\Users\Anders\Source-VS2010\boost_1_47_0\stage\lib;C:\Users\Anders\Source-VS2010\libnoise\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>OgreMain.lib;OgreTerrain.lib;OIS.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\$(Configuration)\OgreWater.exe" "C:\Users\Anders\Source-VS2010\ogre_build_v1-7-2\bin\$(Configuration)"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Materials" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Shaders" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\programs"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Programs" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Compositors" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\materials\scripts"
-copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Particles" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-2\Samples\Media\particle"</Command>
+      <Command>copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\$(Configuration)\OgreWater.exe" "C:\Users\Anders\Source-VS2010\ogre_build_v1-7-3\bin\$(Configuration)"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Materials" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Shaders" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\programs"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Programs" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Compositors" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\materials\scripts"
+copy "C:\Users\Anders\Documents\Visual Studio 2010\Projects\OgreWater\OgreWater\Resources\Particles" "C:\Users\Anders\Source-VS2010\ogre_src_v1-7-3\Samples\Media\particle"</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Inputs>%(Inputs)</Inputs>

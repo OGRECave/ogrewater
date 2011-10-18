@@ -76,9 +76,12 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	normal += normalize(2 * tex2D(normalTexture, float2(texCoord.y, 1.0 - texCoord.x - 5 * time)) - 1.0);
 	normal += normalize(2 * tex2D(normalTexture, float2(1.0 - texCoord.x, 1.0 - texCoord.y - 5 * time)) - 1.0);
 	normal += normalize(2 * tex2D(normalTexture, float2(1.0 - texCoord.y, texCoord.x - 5 * time)) - 1.0);
+	normal.z *= 0.1;
 
 	normal = normalize(normal);
-	float intensity = 0.25 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 10000.0);
+	float intensity = 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 10.0);
+	intensity += 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 100.0);
+	intensity += 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 1000.0);
 	if (length(input.normal) != 0.0)
 	{
 		intensity *= saturate(dot(input.normal, -input.lightDirection));
