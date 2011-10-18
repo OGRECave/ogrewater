@@ -105,7 +105,7 @@ namespace OgreWater
 			return false;
 		}
 
-		mWindow = mRoot->initialise(true, "OgreWater Demo v. 1.1");
+		mWindow = mRoot->initialise(true, "OgreWater Demo v. 1.1.1");
 
 		// Set default mipmap level (NB some APIs ignore this)
 		Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
@@ -499,8 +499,8 @@ namespace OgreWater
 		}
 		blendMap0->dirty();
 		blendMap1->dirty();
-		blendMap0->getParent()->updateCompositeMap();
-		blendMap1->getParent()->updateCompositeMap();
+		blendMap0->update();
+		blendMap1->update();
 	}
 
 	void Application::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)

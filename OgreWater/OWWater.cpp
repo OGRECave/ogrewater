@@ -605,7 +605,8 @@ namespace OgreWater
 								tech = iter->second->getBestTechnique();
 							}
 
-							*ppTech = tech;						}
+							*ppTech = tech;
+						}
 					}
 				}
 			}
