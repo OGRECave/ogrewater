@@ -39,6 +39,7 @@ material OgreWater/Caustics
 			fragment_program_ref OgreWater/Caustics/Fragment
 			{
 				param_named_auto time time 0.005
+				param_named_auto waterData custom 0
 			}
 
 			texture_unit

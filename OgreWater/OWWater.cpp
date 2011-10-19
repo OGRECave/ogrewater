@@ -577,6 +577,8 @@ namespace OgreWater
 								tech = iter->second->getBestTechnique();
 							}
 
+							Ogre::GpuProgramParametersSharedPtr fragmentParams = tech->getPass("CausticsPass")->getFragmentProgramParameters();
+							fragmentParams->setNamedConstant("waterData", Ogre::Vector4(mWaterHeight, 100.0, 0.0, 0.0));
 							*ppTech = tech;
 						}
 					}
@@ -605,6 +607,8 @@ namespace OgreWater
 								tech = iter->second->getBestTechnique();
 							}
 
+							Ogre::GpuProgramParametersSharedPtr fragmentParams = tech->getPass("CausticsPass")->getFragmentProgramParameters();
+							fragmentParams->setNamedConstant("waterData", Ogre::Vector4(mWaterHeight, 100.0, 0.0, 0.0));
 							*ppTech = tech;
 						}
 					}

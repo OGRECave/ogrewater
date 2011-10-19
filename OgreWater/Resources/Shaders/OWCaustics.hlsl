@@ -22,6 +22,8 @@ THE SOFTWARE.
 
 uniform sampler2D normalTexture : register(s0);
 
+static const float PI = 3.1415926535897932384626433832795;
+
 struct VS_INPUT
 {
 	float4 position		: POSITION;
@@ -64,13 +66,21 @@ VS_OUTPUT main_vp(VS_INPUT input,
 }
 
 PS_OUTPUT main_fp(PS_INPUT input,
-		uniform float time)
+		uniform float time,
+		uniform float4 waterData)
 {
 	PS_OUTPUT output;
 
+	float waterHeight = waterData.x - input.positionWS.y;
+
+	float c = (waterHeight - waterData.y) / waterData.y;
+	c = clamp(c, -1.0, 1.0);
+	float causticsHighlight = (1.0 + cos(PI * c)) / 2.0;
+
 	float3 normal = float3(0.0, 0.0, 0.0);
 
-	float2 texCoord = 0.001 * input.positionWS.xz;
+	float3 t = dot(float3(0.0, 1.0, 0.0), -input.lightDirection);
+	float2 texCoord = 0.001 * (input.positionWS.xz + ((waterHeight / t) * (-input.lightDirection) - waterHeight * float3(0.0, 1.0, 0.0)).xz);
 
 	normal = normalize(2 * tex2D(normalTexture, float2(texCoord.x, texCoord.y - 5 * time)) - 1.0);
 	normal += normalize(2 * tex2D(normalTexture, float2(texCoord.y, 1.0 - texCoord.x - 5 * time)) - 1.0);
@@ -82,12 +92,13 @@ PS_OUTPUT main_fp(PS_INPUT input,
 	float intensity = 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 10.0);
 	intensity += 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 100.0);
 	intensity += 0.1 * pow(saturate(dot(normal.xzy, -input.lightDirection)), 1000.0);
+
 	if (length(input.normal) != 0.0)
 	{
 		intensity *= saturate(dot(input.normal, -input.lightDirection));
 	}
 
-	output.color = intensity * float4(1.0, 1.0, 1.0, 0.0);
+	output.color = causticsHighlight * intensity * float4(1.0, 1.0, 1.0, 0.0);
 
 	return output;
 }
