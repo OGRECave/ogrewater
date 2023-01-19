@@ -1,0 +1,14 @@
+[OgreInternal]
+FileSystem=@OGRE_MEDIA_DIR@/Main
+FileSystem=@OGRE_MEDIA_DIR@/RTShaderLib/GLSL
+FileSystem=@OGRE_MEDIA_DIR@/Terrain/
+
+[General]
+FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Compositors
+FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Materials
+FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Particles
+FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Programs
+FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Shaders
+
+FileSystem=@OGRE_MEDIA_DIR@/materials/textures
+FileSystem=@OGRE_MEDIA_DIR@/materials/scripts
