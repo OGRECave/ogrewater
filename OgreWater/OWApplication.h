@@ -32,21 +32,18 @@ THE SOFTWARE.
 #include <OgreTerrainGroup.h>
 #include <OgreCompositorInstance.h>
 
-#include <OIS/OISInputManager.h>
+#include <OgreApplicationContext.h>
+#include <OgreCameraMan.h>
 
 namespace OgreWater
 {
-	class Application : public Ogre::WindowEventListener
+	class Application : public OgreBites::ApplicationContext, public OgreBites::InputListener
 	{
 	private:
-		Ogre::Root* mRoot;
-		Ogre::String mPluginsCfg;
-		Ogre::String mResourcesCfg;
 		Ogre::RenderWindow* mWindow;
 
 		// Camera
 		Ogre::SceneNode * mCameraPosition;
-		Ogre::SceneNode * mCameraPitch;
 
 		Water * mWater;
 
@@ -58,19 +55,15 @@ namespace OgreWater
 		Ogre::TerrainGroup* mTerrainGroup;
 		bool mTerrainsImported;
 
-		// OIS Input devices
-		OIS::InputManager* mInputManager;
-		OIS::Mouse*    mMouse;
-		OIS::Keyboard* mKeyboard;
+		OgreBites::CameraMan* mCameraMan;
+		Ogre::Real mTimeSinceLastFrame;
 	protected:
-		// Ogre::WindowEventListener
-		void windowResized(Ogre::RenderWindow* rw);
-		void windowClosed(Ogre::RenderWindow* rw);
-
 		void configureTerrainDefaults(Ogre::Light * light);
 		void defineTerrain(long x, long y);
 		void initBlendMaps(Ogre::Terrain* terrain);
-		void Application::getTerrainImage(bool flipX, bool flipY, Ogre::Image& img);
+		void getTerrainImage(bool flipX, bool flipY, Ogre::Image& img);
+		void loadResources() override {}
+		bool keyPressed(const OgreBites::KeyboardEvent& evt) override;
 	public:
 		Application(void);
 		virtual ~Application(void);

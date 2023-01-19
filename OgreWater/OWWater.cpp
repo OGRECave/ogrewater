@@ -22,16 +22,7 @@ THE SOFTWARE.
 
 #include "OWWater.h"
 
-#include <OgreRenderWindow.h>
-#include <OgreSceneManager.h>
-#include <OgreMaterialManager.h>
-#include <OgreEntity.h>
-#include <OgreSubEntity.h>
-#include <OgreHardwarePixelBuffer.h>
-#include <OgreCompositorManager.h>
-#include <OgreBillboardParticleRenderer.h>
-#include <OgreParticleSystem.h>
-#include <OgreParticle.h>
+#include <Ogre.h>
 
 namespace OgreWater
 {
@@ -72,11 +63,8 @@ namespace OgreWater
 		mSceneDepthTexture->removeAllListeners();
 	}
 
-	void Water::init()
+	void Water::createTextures()
 	{
-		mWindow->addListener(this);
-
-		// Reflection
 		Ogre::TexturePtr reflectionTexture = Ogre::TextureManager::getSingleton().createManual(
 			"ReflectionTexture",
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -88,11 +76,66 @@ namespace OgreWater
 			Ogre::TU_RENDERTARGET);
 
 		mReflectionTexture = reflectionTexture->getBuffer()->getRenderTarget();
+
+		Ogre::TexturePtr reflectionDepthTexture = Ogre::TextureManager::getSingleton().createManual(
+			"ReflectionDepthTexture",
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D,
+			mWindow->getWidth(),
+			mWindow->getHeight(),
+			0,
+			Ogre::PF_FLOAT32_R,
+			Ogre::TU_RENDERTARGET);
+
+		mReflectionDepthTexture = reflectionDepthTexture->getBuffer()->getRenderTarget();
+
+		Ogre::TexturePtr refractionTexture = Ogre::TextureManager::getSingleton().createManual(
+			"RefractionTexture",
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D,
+			mWindow->getWidth(),
+			mWindow->getHeight(),
+			0,
+			Ogre::PF_R8G8B8A8,
+			Ogre::TU_RENDERTARGET);
+
+		mRefractionTexture = refractionTexture->getBuffer()->getRenderTarget();
+
+		Ogre::TexturePtr refractionDepthTexture = Ogre::TextureManager::getSingleton().createManual(
+			"RefractionDepthTexture",
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D,
+			mWindow->getWidth(),
+			mWindow->getHeight(),
+			0,
+			Ogre::PF_FLOAT32_R,
+			Ogre::TU_RENDERTARGET);
+
+		mRefractionDepthTexture = refractionDepthTexture->getBuffer()->getRenderTarget();
+
+		Ogre::TexturePtr sceneDepthTexture = Ogre::TextureManager::getSingleton().createManual(
+			"SceneDepthTexture",
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			Ogre::TEX_TYPE_2D,
+			mWindow->getWidth(),
+			mWindow->getHeight(),
+			0,
+			Ogre::PF_FLOAT32_R,
+			Ogre::TU_RENDERTARGET);
+
+		mSceneDepthTexture = sceneDepthTexture->getBuffer()->getRenderTarget();
+	}
+
+	void Water::init()
+	{
+		mWindow->addListener(this);
+
+		// Reflection
+
 		mReflectionTexture->addListener(this);
 
 		mReflectionCamera = mSceneMgr->createCamera("ReflectionCamera");
-		mReflectionCamera->setPosition(mCamera->getDerivedPosition());
-		mReflectionCamera->setOrientation(mCamera->getDerivedOrientation());
+		mCamera->getParentSceneNode()->attachObject(mReflectionCamera);
 		mReflectionCamera->setAspectRatio(mCamera->getAspectRatio());
 		mReflectionCamera->setNearClipDistance(mCamera->getNearClipDistance());
 		mReflectionCamera->setFarClipDistance(mCamera->getFarClipDistance());
@@ -105,22 +148,11 @@ namespace OgreWater
 		reflectionViewport->setOverlaysEnabled(false);
 
 		// Reflection depth
-		Ogre::TexturePtr reflectionDepthTexture = Ogre::TextureManager::getSingleton().createManual(
-			"ReflectionDepthTexture",
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D,
-			mWindow->getWidth(),
-			mWindow->getHeight(),
-			0,
-			Ogre::PF_FLOAT32_R,
-			Ogre::TU_RENDERTARGET);
 
-		mReflectionDepthTexture = reflectionDepthTexture->getBuffer()->getRenderTarget();
 		mReflectionDepthTexture->addListener(this);
 
 		mReflectionDepthCamera = mSceneMgr->createCamera("ReflectionDepthCamera");
-		mReflectionDepthCamera->setPosition(mCamera->getDerivedPosition());
-		mReflectionDepthCamera->setOrientation(mCamera->getDerivedOrientation());
+		mCamera->getParentSceneNode()->attachObject(mReflectionDepthCamera);
 		mReflectionDepthCamera->setAspectRatio(mCamera->getAspectRatio());
 		mReflectionDepthCamera->setNearClipDistance(mCamera->getNearClipDistance());
 		mReflectionDepthCamera->setFarClipDistance(mCamera->getFarClipDistance());
@@ -134,22 +166,11 @@ namespace OgreWater
 		reflectionDepthViewport->setSkiesEnabled(false);
 
 		// Refraction
-		Ogre::TexturePtr refractionTexture = Ogre::TextureManager::getSingleton().createManual(
-			"RefractionTexture",
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D,
-			mWindow->getWidth(),
-			mWindow->getHeight(),
-			0,
-			Ogre::PF_R8G8B8A8,
-			Ogre::TU_RENDERTARGET);
 
-		mRefractionTexture = refractionTexture->getBuffer()->getRenderTarget();
 		mRefractionTexture->addListener(this);
 
 		mRefractionCamera = mSceneMgr->createCamera("RefractionCamera");
-		mRefractionCamera->setPosition(mCamera->getDerivedPosition());
-		mRefractionCamera->setOrientation(mCamera->getDerivedOrientation());
+		mCamera->getParentSceneNode()->attachObject(mRefractionCamera);
 		mRefractionCamera->setAspectRatio(mCamera->getAspectRatio());
 		mRefractionCamera->setNearClipDistance(mCamera->getNearClipDistance());
 		mRefractionCamera->setFarClipDistance(mCamera->getFarClipDistance());
@@ -162,22 +183,11 @@ namespace OgreWater
 		refractionViewport->setSkiesEnabled(false);
 
 		// Refraction depth
-		Ogre::TexturePtr refractionDepthTexture = Ogre::TextureManager::getSingleton().createManual(
-			"RefractionDepthTexture",
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D,
-			mWindow->getWidth(),
-			mWindow->getHeight(),
-			0,
-			Ogre::PF_FLOAT32_R,
-			Ogre::TU_RENDERTARGET);
 
-		mRefractionDepthTexture = refractionDepthTexture->getBuffer()->getRenderTarget();
 		mRefractionDepthTexture->addListener(this);
 
 		mRefractionDepthCamera = mSceneMgr->createCamera("RefractionDepthCamera");
-		mRefractionDepthCamera->setPosition(mCamera->getDerivedPosition());
-		mRefractionDepthCamera->setOrientation(mCamera->getDerivedOrientation());
+		mCamera->getParentSceneNode()->attachObject(mRefractionDepthCamera);
 		mRefractionDepthCamera->setAspectRatio(mCamera->getAspectRatio());
 		mRefractionDepthCamera->setNearClipDistance(mCamera->getNearClipDistance());
 		mRefractionDepthCamera->setFarClipDistance(mCamera->getFarClipDistance());
@@ -190,22 +200,11 @@ namespace OgreWater
 		refractionDepthViewport->setSkiesEnabled(false);
 
 		// Scene depth (later used for full-screen under-water fog)
-		Ogre::TexturePtr sceneDepthTexture = Ogre::TextureManager::getSingleton().createManual(
-			"SceneDepthTexture",
-			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			Ogre::TEX_TYPE_2D,
-			mWindow->getWidth(),
-			mWindow->getHeight(),
-			0,
-			Ogre::PF_FLOAT32_R,
-			Ogre::TU_RENDERTARGET);
 
-		mSceneDepthTexture = sceneDepthTexture->getBuffer()->getRenderTarget();
 		mSceneDepthTexture->addListener(this);
 
 		mSceneDepthCamera = mSceneMgr->createCamera("SceneDepthCamera");
-		mSceneDepthCamera->setPosition(mCamera->getDerivedPosition());
-		mSceneDepthCamera->setOrientation(mCamera->getDerivedOrientation());
+		mCamera->getParentSceneNode()->attachObject(mSceneDepthCamera);
 		mSceneDepthCamera->setAspectRatio(mCamera->getAspectRatio());
 		mSceneDepthCamera->setNearClipDistance(mCamera->getNearClipDistance());
 		mSceneDepthCamera->setFarClipDistance(mCamera->getFarClipDistance());
@@ -240,11 +239,11 @@ namespace OgreWater
 		if (mWaterPlaneEntity == 0)
 		{
 			mWaterPlaneEntity = mSceneMgr->createEntity(Ogre::SceneManager::PT_PLANE);
-
+			mWaterPlaneEntity->getMesh()->buildTangentVectors();
 			mWaterPlaneNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-			mWaterPlaneNode->setPosition(0.0, mWaterHeight, 0.0);
 			mWaterPlaneNode->setScale(100 * Ogre::Vector3::UNIT_SCALE);
 			mWaterPlaneNode->pitch(Ogre::Degree(-90));
+			mWaterPlaneNode->setPosition(0.0, mWaterHeight, 0.0);
 			mWaterPlaneNode->attachObject(mWaterPlaneEntity);
 		}
 
@@ -267,58 +266,41 @@ namespace OgreWater
 
 	void Water::update(Ogre::Real timeSinceLastFrame)
 	{
-		Ogre::Vector3 cameraWorldPosition = mCamera->getDerivedPosition();
-		Ogre::Quaternion cameraWorldOrientation = mCamera->getDerivedOrientation();
-
-		mReflectionCamera->setPosition(cameraWorldPosition);
-		mReflectionCamera->setOrientation(cameraWorldOrientation);
-		mReflectionDepthCamera->setPosition(cameraWorldPosition);
-		mReflectionDepthCamera->setOrientation(cameraWorldOrientation);
-		mRefractionCamera->setPosition(cameraWorldPosition);
-		mRefractionCamera->setOrientation(cameraWorldOrientation);
-		mRefractionDepthCamera->setPosition(cameraWorldPosition);
-		mRefractionDepthCamera->setOrientation(cameraWorldOrientation);
-		mSceneDepthCamera->setPosition(cameraWorldPosition);
-		mSceneDepthCamera->setOrientation(cameraWorldOrientation);
-
 		if (mWaterDustEnabled)
 		{
 			mWaterDustSceneNode->setPosition(mCamera->getDerivedPosition());
 
-			Ogre::ParticleIterator particleIterator = mWaterDustParticleSystem->_getIterator();
-
-			while (!particleIterator.end())
+			for (Ogre::Particle * particle : mWaterDustParticleSystem->_getActiveParticles())
 			{
-				Ogre::Particle * particle = particleIterator.getNext();
-				Ogre::Vector3 position = particle->position - mWaterDustSceneNode->getPosition();
+				Ogre::Vector3 position = particle->mPosition - mWaterDustSceneNode->getPosition();
 				if (position.x > 250)
 				{
-					particle->position.x -= 500;
+					particle->mPosition.x -= 500;
 				}
 				else if (position.x < -250)
 				{
-					particle->position.x += 500;
+					particle->mPosition.x += 500;
 				}
 				if (position.y > 250)
 				{
-					particle->position.y -= 500;
+					particle->mPosition.y -= 500;
 				}
 				else if (position.y < -250)
 				{
-					particle->position.y += 500;
+					particle->mPosition.y += 500;
 				}
 				if (position.z > 250)
 				{
-					particle->position.z -= 500;
+					particle->mPosition.z -= 500;
 				}
 				else if (position.z < -250)
 				{
-					particle->position.z += 500;
+					particle->mPosition.z += 500;
 				}
 
-				while (particle->position.y > mWaterHeight)
+				while (particle->mPosition.y > mWaterHeight)
 				{
-					particle->position.y -= 500;
+					particle->mPosition.y -= 500;
 				}
 			}
 		}
@@ -327,15 +309,11 @@ namespace OgreWater
 		{
 			mAirBubblesSceneNode->setPosition(mCamera->getDerivedPosition());
 
-			Ogre::ParticleIterator particleIterator = mAirBubblesParticleSystem->_getIterator();
-
-			while (!particleIterator.end())
+			for (Ogre::Particle * particle : mAirBubblesParticleSystem->_getActiveParticles())
 			{
-				Ogre::Particle * particle = particleIterator.getNext();
-
-				if (particle->position.y > mWaterHeight)
+				if (particle->mPosition.y > mWaterHeight)
 				{
-					particle->timeToLive = 0;
+					particle->mTimeToLive = 0;
 				}
 			}
 		}
@@ -362,7 +340,7 @@ namespace OgreWater
 			else
 			{
 				// Update refraction camera view matrix
-				Ogre::Matrix4 viewMatrix(mCamera->getViewMatrix() * aboveSurfaceRefractionMatrix);
+				Ogre::Affine3 viewMatrix(mCamera->getViewMatrix() * aboveSurfaceRefractionMatrix);
 
 				mRefractionCamera->setCustomViewMatrix(true, viewMatrix);
 				mRefractionDepthCamera->setCustomViewMatrix(true, viewMatrix);
@@ -392,7 +370,7 @@ namespace OgreWater
 			else
 			{
 				// Update refraction camera view matrix 
-				Ogre::Matrix4 refractionViewMatrix = mCamera->getViewMatrix() * belowSurfaceRefractionMatrix;
+				Ogre::Affine3 refractionViewMatrix = mCamera->getViewMatrix() * belowSurfaceRefractionMatrix;
 
 				mRefractionCamera->setCustomViewMatrix(true, refractionViewMatrix);
 				mRefractionDepthCamera->setCustomViewMatrix(true, refractionViewMatrix);
@@ -596,7 +574,7 @@ namespace OgreWater
 							if (iter == mCausticsMaterialMap.end())
 							{
 								// Couldn't find a caustics version of this material, create it
-								Ogre::MaterialPtr causticsMaterial = (**ppTech).getParent()->clone((**ppTech).getName() + "Caustics");
+								Ogre::MaterialPtr causticsMaterial = (**ppTech).getParent()->clone((**ppTech).getParent()->getName() + "Caustics");
 								tech = causticsMaterial->getBestTechnique();
 								Ogre::Pass * causticsPass = tech->createPass();
 								(*causticsPass) = (*(mCausticsTechnique->getPass(0)));
@@ -738,41 +716,35 @@ namespace OgreWater
 	void Water::updateRefractionMatrices()
 	{
 		aboveSurfaceRefractionMatrix =
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.0, 0, mWaterHeight,
-			0, 0, 1, 0,
-			0, 0, 0, 1) *
+			0, 0, 1, 0) *
 
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.0/1.33, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1) *
+			0, 0, 1, 0) *
 
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.0, 0, -mWaterHeight,
-			0, 0, 1, 0,
-			0, 0, 0, 1);
+			0, 0, 1, 0);
 
 		belowSurfaceRefractionMatrix =
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.0, 0, mWaterHeight,
-			0, 0, 1, 0,
-			0, 0, 0, 1) *
+			0, 0, 1, 0) *
 
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.33, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1) *
+			0, 0, 1, 0) *
 
-			Ogre::Matrix4(
+			Ogre::Affine3(
 			1, 0, 0, 0,
 			0, 1.0, 0, -mWaterHeight,
-			0, 0, 1, 0,
-			0, 0, 0, 1);
+			0, 0, 1, 0);
 	}
 }

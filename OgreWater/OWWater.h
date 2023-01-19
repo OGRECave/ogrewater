@@ -28,6 +28,7 @@ THE SOFTWARE.
 #include <OgreRenderTexture.h>
 #include <OgreRenderTargetListener.h>
 #include <OgreCompositorInstance.h>
+#include <OgrePlane.h>
 
 #include <map>
 
@@ -41,6 +42,7 @@ namespace OgreWater
 	public:
 		Water(Ogre::RenderWindow * window, Ogre::SceneManager * sceneMgr, Ogre::Camera * camera);
 		~Water();
+		void createTextures();
 		void init();
 		void update(Ogre::Real timeSinceLastFrame);
 
@@ -140,8 +142,8 @@ namespace OgreWater
 		bool mWaterDustEnabled;
 		bool mAirBubblesEnabled;
 
-		Ogre::Matrix4 aboveSurfaceRefractionMatrix;
-		Ogre::Matrix4 belowSurfaceRefractionMatrix;
+		Ogre::Affine3 aboveSurfaceRefractionMatrix;
+		Ogre::Affine3 belowSurfaceRefractionMatrix;
 
 		typedef std::map<Ogre::String, Ogre::MaterialPtr> CausticsMaterialMap;
 		CausticsMaterialMap mCausticsMaterialMap;
