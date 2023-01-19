@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #include <OgreMesh.h>
 
-#include <noise.h>
+#include "SimplexNoise.h"
 
 namespace OgreWater
 {
@@ -49,8 +49,7 @@ namespace OgreWater
 		Ogre::Vector3 * mData;
 		Ogre::Real mMaxRadius;
 
-		noise::module::Perlin mPerlin;
-		//noise::module::RidgedMulti mPerlin;
+		SimplexNoise mPerlin;
 	};
 }
 

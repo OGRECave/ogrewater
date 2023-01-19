@@ -40,8 +40,6 @@ namespace OgreWater
 	{
 		mData = new Ogre::Vector3[mNumVertices];
 
-		mPerlin.SetOctaveCount(2);
-
 		mMesh = Ogre::MeshManager::getSingleton().createManual(meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 		Ogre::SubMesh * subMesh = mMesh->createSubMesh();
 		Ogre::VertexData * vertexData = mMesh->sharedVertexData = new Ogre::VertexData();
@@ -210,7 +208,7 @@ namespace OgreWater
 			Ogre::Real r = Ogre::Vector3(mData[i].x, 0.0, mData[i].z).length();
 			Ogre::Real k = 1.0 - r / mMaxRadius;
 			Ogre::Vector3 pos = basePos + mData[i];
-			Ogre::Real height = k * 25 * mPerlin.GetValue(0.005 * pos.x + 0.5 * mTotalTime, 0.2 * mTotalTime, 0.001 * pos.z);
+			Ogre::Real height = k * 25 * mPerlin.fractal(2, 0.005 * pos.x + 0.5 * mTotalTime, 0.2 * mTotalTime, 0.001 * pos.z);
 
 			mData[i].y = height;
 
