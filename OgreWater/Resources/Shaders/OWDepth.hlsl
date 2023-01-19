@@ -20,9 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D reflectionTexture : register(s0);
-uniform sampler2D refractionTexture : register(s1);
-uniform sampler2D normalTexture : register(s2);
+#include <OgreUnifiedShader.h>
+
+SAMPLER2D(reflectionTexture, 0);
+SAMPLER2D( refractionTexture, 1);
+SAMPLER2D( normalTexture, 2);
 
 struct VS_INPUT
 {
@@ -37,6 +39,7 @@ struct VS_OUTPUT
 
 struct PS_INPUT
 {
+	float4 position			: POSITION;
 	float3 positionWS	: TEXCOORD0;
 };
 

@@ -20,7 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D tex : register(s0);
+#include <OgreUnifiedShader.h>
+SAMPLER2D(tex, 0);
 
 struct VS_INPUT
 {

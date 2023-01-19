@@ -33,6 +33,7 @@ struct VS_OUTPUT
 
 struct PS_INPUT
 {
+	float4 position			: POSITION;
 	float2 texCoord			: TEXCOORD0;
 };
 

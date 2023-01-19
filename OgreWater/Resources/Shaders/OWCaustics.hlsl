@@ -20,14 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D normalTexture : register(s0);
+#include <OgreUnifiedShader.h>
+
+SAMPLER2D(normalTexture, 0);
 
 static const float PI = 3.1415926535897932384626433832795;
 
 struct VS_INPUT
 {
 	float4 position		: POSITION;
-	float3 normal		: NORMAL;
+	//float3 normal		: NORMAL;
 };
 
 struct VS_OUTPUT
@@ -40,6 +42,7 @@ struct VS_OUTPUT
 
 struct PS_INPUT
 {
+	float4 position			: POSITION;
 	float3 normal			: NORMAL;
 	float3 positionWS		: TEXCOORD0;
 	float3 lightDirection	: TEXCOORD1;
@@ -59,7 +62,7 @@ VS_OUTPUT main_vp(VS_INPUT input,
 
 	output.position = mul(worldViewProj, input.position);
 	output.positionWS = mul(world, input.position);
-	output.normal = input.normal;
+	output.normal = float3(0,0,0);//input.normal;
 	output.lightDirection = lightDirection;
 
 	return output;

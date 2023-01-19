@@ -20,7 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D RT : register(s0);
+#include <OgreUnifiedShader.h>
+
+SAMPLER2D(RT, 0);
 
 static const float gaussianWeights[11] = {
 	0.01222447,

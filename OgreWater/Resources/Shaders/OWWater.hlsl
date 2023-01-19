@@ -20,11 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D reflectionTexture : register(s0);
-uniform sampler2D refractionTexture : register(s1);
-uniform sampler2D reflectionDepthTexture : register(s2);
-uniform sampler2D refractionDepthTexture : register(s3);
-uniform sampler2D normalTexture : register(s4);
+#include <OgreUnifiedShader.h>
+
+SAMPLER2D(reflectionTexture, 0);
+SAMPLER2D(refractionTexture, 1);
+SAMPLER2D(reflectionDepthTexture, 2);
+SAMPLER2D(refractionDepthTexture, 3);
+SAMPLER2D(normalTexture, 4);
 
 static const float PI_HALF = 1.5707963267948965;
 
@@ -48,7 +50,7 @@ struct VS_OUTPUT
 
 struct PS_INPUT
 {
-	float2 screenPos		: VPOS;
+	float4 screenPos		: VPOS;
 	float3 normal			: NORMAL;
 	float3 positionWS		: TEXCOORD0;
 	float3 viewDirection	: TEXCOORD1;

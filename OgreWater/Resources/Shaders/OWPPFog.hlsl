@@ -20,9 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-uniform sampler2D Scene : register(s0);
-uniform sampler2D RT : register(s1);
-uniform sampler2D SceneDepthTexture : register(s2);
+#include <OgreUnifiedShader.h>
+
+SAMPLER2D(Scene, 0);
+SAMPLER2D(RT, 1);
+SAMPLER2D(SceneDepthTexture, 2);
 
 #include "OWPPEffect.hlsl"
 
