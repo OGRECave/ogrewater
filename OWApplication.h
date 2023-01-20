@@ -37,15 +37,12 @@ THE SOFTWARE.
 
 namespace OgreWater
 {
-	class Application : public OgreBites::ApplicationContext, public OgreBites::InputListener
+	class Application : public OgreBites::ApplicationContext, public OgreBites::InputListener, public Ogre::RenderTargetListener
 	{
-	private:
-		Ogre::RenderWindow* mWindow;
-
 		// Camera
 		Ogre::SceneNode * mCameraPosition;
 
-		Water * mWater;
+		std::unique_ptr<Water> mWater;
 
 		Ogre::SceneManager* mSceneMgr;
 		Ogre::Camera * mCamera;
@@ -57,6 +54,9 @@ namespace OgreWater
 
 		OgreBites::CameraMan* mCameraMan;
 		Ogre::Real mTimeSinceLastFrame;
+
+    	void preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt) override;
+
 	protected:
 		void configureTerrainDefaults(Ogre::Light * light);
 		void defineTerrain(long x, long y);
@@ -66,7 +66,6 @@ namespace OgreWater
 		bool keyPressed(const OgreBites::KeyboardEvent& evt) override;
 	public:
 		Application(void);
-		virtual ~Application(void);
 		bool go(void);
 	};
 }

@@ -26,24 +26,45 @@ THE SOFTWARE.
 #include <OgreApplicationContext.h>
 #include <OgreRTShaderSystem.h>
 
+#include <OgreOverlayManager.h>
+#include <OgreOverlaySystem.h>
+#include <OgreImGuiOverlay.h>
+#include <OgreImGuiInputListener.h>
+
 namespace OgreWater
 {
 	Application::Application(void)
-		: OgreBites::ApplicationContext("OgreWater"),
-		mWindow(0),
-		mWater(0)
+		: OgreBites::ApplicationContext("OgreWater")
 	{
 	}
 
-	Application::~Application(void)
+	void Application::preViewportUpdate(const Ogre::RenderTargetViewportEvent& evt)
 	{
-		delete mWater;
+		Ogre::ImGuiOverlay::NewFrame();
 
-		if (mWindow != 0)
-		{
-			windowClosed(mWindow);
-		}
-		delete mRoot;
+		ImGui::Begin("Water Properties");
+		float waterHeight = mWater->getWaterHeight();
+		if(ImGui::SliderFloat("Water height", &waterHeight, 100, 1000))
+			mWater->setWaterHeight(waterHeight);
+
+		Ogre::Vector4 materialVariables = mWater->getMaterialVariables();
+		bool materialUpdated = false;
+		if(ImGui::SliderFloat("reflection texture offset", &materialVariables.x, 0, 1))
+			materialUpdated = true;
+		if(ImGui::SliderFloat("refraction texture offset", &materialVariables.y, 0, 0.1))
+			materialUpdated = true;
+		if(ImGui::SliderFloat("water density", &materialVariables.z, 0, 0.01, "%.4f"))
+			materialUpdated = true;
+		if(ImGui::SliderFloat("water blur", &materialVariables.w, 0, 0.01, "%.4f"))
+			materialUpdated = true;
+		if(materialUpdated)
+			mWater->setMaterialVariables(materialVariables);
+
+		Ogre::Vector4 waterFogColor = mWater->getWaterFogColor();
+		if(ImGui::ColorEdit3("water fog color", waterFogColor.ptr()))
+			mWater->setWaterFogColor(waterFogColor);
+
+		ImGui::End();
 	}
 
 	bool Application::keyPressed(const OgreBites::KeyboardEvent& evt)
@@ -60,130 +81,15 @@ namespace OgreWater
 			return true;
 		}
 
-		auto timeSinceLastFrame = mTimeSinceLastFrame;
-
-		// Update water color
-		if ((evt.keysym.mod & OgreBites::KMOD_CTRL) == 0)
-		{
-			Ogre::Vector4 waterFogColor = mWater->getWaterFogColor();
-
-			bool colorUpdated = false;
-			if (evt.keysym.sym == '1')
-			{
-				waterFogColor.x -= 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-			if (evt.keysym.sym == '2')
-			{
-				waterFogColor.x += 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-			if (evt.keysym.sym == '3')
-			{
-				waterFogColor.y -= 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-			if (evt.keysym.sym == '4')
-			{
-				waterFogColor.y += 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-			if (evt.keysym.sym == '5')
-			{
-				waterFogColor.z -= 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-			if (evt.keysym.sym == '6')
-			{
-				waterFogColor.z += 0.1 * timeSinceLastFrame;
-				colorUpdated = true;
-			}
-
-			if (colorUpdated)
-			{
-				waterFogColor.x = Ogre::Math::saturate(waterFogColor.x);
-				waterFogColor.y = Ogre::Math::saturate(waterFogColor.y);
-				waterFogColor.z = Ogre::Math::saturate(waterFogColor.z);
-
-				mWater->setWaterFogColor(waterFogColor);
-			}
-
-			if (evt.keysym.sym == '7')
-			{
-				mWater->setWaterHeight(mWater->getWaterHeight() - 10.0 * timeSinceLastFrame);
-			}
-			if (evt.keysym.sym == '8')
-			{
-				mWater->setWaterHeight(mWater->getWaterHeight() + 10.0 * timeSinceLastFrame);
-			}
-		}
-
-		// Update material variables
-		if (evt.keysym.mod & OgreBites::KMOD_CTRL)
-		{
-			Ogre::Vector4 materialVariables = mWater->getMaterialVariables();
-			bool materialUpdated = false;
-			if (evt.keysym.sym == '1')
-			{
-				materialVariables.x -= 0.1 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '2')
-			{
-				materialVariables.x += 0.1 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '3')
-			{
-				materialVariables.y -= 0.0001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '4')
-			{
-				materialVariables.y += 0.0001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '5')
-			{
-				materialVariables.z -= 0.001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '6')
-			{
-				materialVariables.z += 0.001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '7')
-			{
-				materialVariables.w -= 0.001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-			if (evt.keysym.sym == '8')
-			{
-				materialVariables.w += 0.001 * timeSinceLastFrame;
-				materialUpdated = true;
-			}
-
-			if (materialUpdated)
-			{
-				materialVariables.x = Ogre::Math::saturate(materialVariables.x);
-				materialVariables.y = Ogre::Math::saturate(materialVariables.y);
-				materialVariables.z = Ogre::Math::saturate(materialVariables.z);
-				materialVariables.w = Ogre::Math::saturate(materialVariables.w);
-
-				mWater->setMaterialVariables(materialVariables);
-			}
-		}
-
 		Ogre::Vector3 cameraPosition = mCameraPosition->getPosition();
 
 		if (evt.keysym.sym == 'q')
 		{
-			mCameraPosition->roll(10 * timeSinceLastFrame * Ogre::Degree(1));
+			mCameraPosition->roll(10 * mTimeSinceLastFrame * Ogre::Degree(1));
 		}
 		if (evt.keysym.sym == 'e')
 		{
-			mCameraPosition->roll(10 * timeSinceLastFrame * Ogre::Degree(-1));
+			mCameraPosition->roll(10 * mTimeSinceLastFrame * Ogre::Degree(-1));
 		}
 
 		return true;
@@ -194,26 +100,35 @@ namespace OgreWater
 		initApp();
 
 		addInputListener(this);
-		mWindow = getRenderWindow();
+		auto window = getRenderWindow();
 
 		// Create the SceneManager, in this case a generic one
 		mSceneMgr = mRoot->createSceneManager();
 		Ogre::RTShader::ShaderGenerator::getSingleton().addSceneManager(mSceneMgr);
 		mCameraPosition = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+		mSceneMgr->addRenderQueueListener(getOverlaySystem());
+		window->addListener(this);
+
+		auto imguiOverlay = new Ogre::ImGuiOverlay();
+		imguiOverlay->show();
+		Ogre::OverlayManager::getSingleton().addOverlay(imguiOverlay); // now owned by overlaymgr
 
 		// Create the camera
 		mCamera = mSceneMgr->createCamera("Camera");
 		mCameraPosition->attachObject(mCamera);
 
-		mCameraPosition->setPosition(Ogre::Vector3(0,500,500));
 		mCamera->setNearClipDistance(1);
 		mCamera->setFarClipDistance(0);
 
 		mCameraMan = new OgreBites::CameraMan(mCameraPosition);
-		addInputListener(mCameraMan);
+		mCameraMan->setStyle(OgreBites::CS_ORBIT);
+		mCameraMan->setYawPitchDist(Ogre::Degree(0), Ogre::Degree(20), 1000);
+		auto imguiListener = new OgreBites::ImGuiInputListener();
+		OgreBites::InputListenerChain chain({imguiListener, mCameraMan});
+		addInputListener(&chain);
 
 		// Create one viewport, entire window
-		Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+		Ogre::Viewport* vp = window->addViewport(mCamera);
 		vp->setBackgroundColour(Ogre::ColourValue::Black);
 
 		// Alter the camera aspect ratio to match the viewport
@@ -237,7 +152,7 @@ namespace OgreWater
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.2, 0.2, 0.2));
 
 		// Create water
-		mWater = new Water(mWindow, mSceneMgr, mCamera);
+		mWater.reset(new Water(window, mSceneMgr, mCamera));
 		mWater->createTextures();
 		// initialise all resource groups
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
