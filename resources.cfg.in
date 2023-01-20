@@ -12,4 +12,3 @@ FileSystem=@PROJECT_SOURCE_DIR@/OgreWater/Resources/Shaders
 
 FileSystem=@OGRE_MEDIA_DIR@/materials/textures
 FileSystem=@OGRE_MEDIA_DIR@/materials/textures/terrain
-FileSystem=@OGRE_MEDIA_DIR@/materials/scripts
