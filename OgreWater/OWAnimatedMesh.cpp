@@ -345,10 +345,10 @@ namespace OgreWater
 		mMesh->_setBounds(aabb, false);
 		mMesh->_setBoundingSphereRadius(aabb.getMaximum().length());
 
-		unsigned short src, dest;
-		if (!mMesh->suggestTangentVectorBuildParams(Ogre::VES_TANGENT, src, dest))
+		unsigned short src;
+		if (!mMesh->suggestTangentVectorBuildParams(src))
 		{
-			mMesh->buildTangentVectors(Ogre::VES_TANGENT, src, dest);
+			mMesh->buildTangentVectors(src);
 		} else {
 			mMesh->buildTangentVectors();
 		}
