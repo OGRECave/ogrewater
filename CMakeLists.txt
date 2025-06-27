@@ -3,7 +3,17 @@ cmake_minimum_required(VERSION 3.10)
 project(OgreWater)
 
 # specify which version and components you need
-find_package(OGRE 13 REQUIRED COMPONENTS Bites Terrain CONFIG)
+find_package(OGRE REQUIRED COMPONENTS Bites Terrain CONFIG)
+find_package(ZLIB)
+find_package(SDL2)
+find_package(assimp REQUIRED CONFIG)
+find_package(pugixml REQUIRED CONFIG)
+
+add_library(fix::assimp INTERFACE IMPORTED)
+set_target_properties(fix::assimp PROPERTIES
+       INTERFACE_LINK_LIBRARIES "${ASSIMP_LIBRARIES};pugixml"
+       INTERFACE_LINK_DIRECTORIES "${ASSIMP_LIBRARY_DIRS}"
+)
 
 file(GLOB SRCS OgreWater/*cpp)
 add_library(OgreWater ${SRCS})
