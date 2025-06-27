@@ -183,11 +183,12 @@ namespace OgreWater
 
 		if (mTerrainsImported)
 		{
-			Ogre::TerrainGroup::TerrainIterator ti = mTerrainGroup->getTerrainIterator();
-			while(ti.hasMoreElements())
+			auto ti = mTerrainGroup->getTerrainSlots().begin();
+			while(ti != mTerrainGroup->getTerrainSlots().end())
 			{
-				Ogre::Terrain* t = ti.getNext()->instance;
+				Ogre::Terrain* t = (*ti).second->instance;
 				initBlendMaps(t);
+				ti++;
 			}
 		}
 
