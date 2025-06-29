@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+/*
 vertex_program OgreWater/PostProcessingVerticalBlur/Vertex hlsl
 {
     source OWPPVerticalBlur.hlsl
@@ -32,4 +33,14 @@ fragment_program OgreWater/PostProcessingVerticalBlur/Fragment hlsl
     source OWPPVerticalBlur.hlsl
 	entry_point main_fp
     target ps_3_0
+}
+*/
+
+vertex_program OgreWater/PostProcessingVerticalBlur/Vertex hlsl glsl glsles
+{
+	source OWPPVerticalBlurVP.glsl
+}
+fragment_program OgreWater/PostProcessingVerticalBlur/Fragment hlsl glsl glsles
+{
+	source OWPPVerticalBlurFP.glsl
 }

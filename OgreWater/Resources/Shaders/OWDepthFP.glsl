@@ -20,28 +20,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
+SAMPLER2D(reflectionTexture, 0);
+SAMPLER2D( refractionTexture, 1);
+SAMPLER2D( normalTexture, 2);
+OGRE_UNIFORMS(
+uniform vec3 cameraPosition;
+)
+MAIN_PARAMETERS
+IN(vec4 position, POSITION)
+IN(vec3 positionWS, TEXCOORD0)
+/* OUT(vec4 depth, COLOR) */
+MAIN_DECLARATION
 {
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
+	vec4 depth = vec4(length(positionWS - cameraPosition), 0.0, 0.0, 1.0);
+	gl_FragColor = depth;
 }
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
-}
-

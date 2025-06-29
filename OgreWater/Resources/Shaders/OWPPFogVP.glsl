@@ -20,28 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
+OGRE_UNIFORMS(
+uniform mat4 worldViewProj;
+)
+MAIN_PARAMETERS
+IN(vec4 position, POSITION)
+OUT(vec2 vTexCoord, TEXCOORD0)
+MAIN_DECLARATION
 {
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
-}
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
+	// Transform position and flip Y-coordinate for OpenGL texture space
+	gl_Position = mul(worldViewProj, position);
+
+	// Convert to normalized device coordinates [-1, 1] then to texture space [0, 1]
+	vTexCoord = (position.xy * vec2(1.0, -1.0) + 1.0) * 0.5;
 }
 
