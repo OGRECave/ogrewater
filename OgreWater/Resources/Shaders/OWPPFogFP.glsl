@@ -20,28 +20,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
+SAMPLER2D(Scene, 0);
+SAMPLER2D(RT, 1);
+SAMPLER2D(SceneDepthTexture, 2);
+
+OGRE_UNIFORMS(
+uniform vec4 waterFogColor;
+uniform vec4 materialVariables; // z: fog density, w: blur intensity
+)
+MAIN_PARAMETERS
+IN(vec2 vTexCoord, TEXCOORD0)
+MAIN_DECLARATION
 {
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
-}
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
+	// Sample textures
+	float depth = texture(SceneDepthTexture, vTexCoord).r;
+	vec3 sceneColor = texture(Scene, vTexCoord).rgb;
+	vec3 blurredColor = texture(RT, vTexCoord).rgb;
+
+	// Fog and blur calculations
+	float f = min(exp(-pow(depth * materialVariables.z, 2.0)), 0.5);
+	float blur = exp(-pow(depth * materialVariables.w, 2.0));
+
+	// Blend scene and blurred colors
+	sceneColor = mix(blurredColor, sceneColor, blur);
+
+	// Final fog blending
+	gl_FragColor = vec4(mix(waterFogColor.rgb, sceneColor, f), 1.0);
 }
 
