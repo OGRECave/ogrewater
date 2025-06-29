@@ -20,28 +20,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
-}
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
-}
+SAMPLER2D(RT, 0);
 
+OGRE_UNIFORMS(
+uniform vec4 viewportSize;
+)
+
+const float gaussianWeights[11] = float[](
+    0.01222447,
+    0.02783468,
+    0.06559061,
+    0.12097757,
+    0.17466632,
+    0.19741265,
+    0.17466632,
+    0.12097757,
+    0.06559061,
+    0.02783468,
+    0.01222447
+);
+
+MAIN_PARAMETERS
+IN(vec2 vTexCoord, TEXCOORD0)
+
+MAIN_DECLARATION
+{
+	vec3 blurSum = vec3(0.0);
+	float texelOffset = viewportSize.x; // Horizontal blur
+	for (int i = 0; i < 11; ++i) {
+		float weight = gaussianWeights[i];
+		float offset = float(i - 5) * texelOffset;
+		blurSum += weight * texture(RT, vec2(vTexCoord.x + offset, vTexCoord.y)).rgb;
+	}
+	gl_FragColor = vec4(blurSum, 1.0);
+}

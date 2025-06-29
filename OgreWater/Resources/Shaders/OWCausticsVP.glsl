@@ -20,28 +20,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
+SAMPLER2D(normalTexture, 0);
+
+OGRE_UNIFORMS(
+uniform mat4 world;
+uniform mat4 worldViewProj;
+uniform vec3 lightDirection;
+)
+MAIN_PARAMETERS
+IN(vec4 position, POSITION)
+OUT(vec3 vNormal, NORMAL)
+OUT(vec3 vPositionWS, TEXCOORD0)
+OUT(vec3 vLightDirection, TEXCOORD1)
+
+MAIN_DECLARATION
 {
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
-}
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
+	gl_Position = mul(worldViewProj, position);
+	vPositionWS = mul(world, position).xyz;
+	vNormal = vec3(0.0, 0.0, 0.0); // Disabled normals in original HLSL
+	vLightDirection = lightDirection;
 }
 

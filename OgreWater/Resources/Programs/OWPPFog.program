@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+/*
 vertex_program OgreWater/PostProcessingFog/Vertex hlsl
 {
     source OWPPFog.hlsl
@@ -33,3 +34,15 @@ fragment_program OgreWater/PostProcessingFog/Fragment hlsl
 	entry_point main_fp
     target ps_3_0
 }
+*/
+
+vertex_program OgreWater/PostProcessingFog/Vertex hlsl glsl glsles
+{
+	source OWPPFogVP.glsl
+}
+
+fragment_program OgreWater/PostProcessingFog/Fragment hlsl glsl glsles
+{
+	source OWPPFogFP.glsl
+}
+
