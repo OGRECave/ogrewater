@@ -20,28 +20,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*vertex_program OgreWater/Depth/Vertex hlsl
-{
-    source OWDepth.hlsl
-	entry_point main_vp
-    target vs_3_0
-}
-*/
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
-{
-    source OWDepthVP.glsl
-}
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
+#include <OgreUnifiedShader.h>
 
-/*
-fragment_program OgreWater/Depth/Fragment hlsl
+OGRE_UNIFORMS(
+uniform mat4 world;
+uniform mat4 worldViewProj;
+uniform mediump vec4 cameraPosition;
+uniform vec3 lightDirection;
+)
+MAIN_PARAMETERS
+IN(vec4 vertex, POSITION)
+IN(vec3 normal, NORMAL)
+IN(vec3 tangent, TANGENT)
+OUT(vec3 vNormal, NORMAL)
+OUT(vec3 positionWS, TEXCOORD0)
+OUT(vec3 viewDirection, TEXCOORD1)
+OUT(vec3 viewDirectionTS, TEXCOORD2)
+OUT(vec3 olightDirection, TEXCOORD3)
+OUT(vec3 lightDirectionTS, TEXCOORD4)
+
+MAIN_DECLARATION
 {
-    source OWDepth.hlsl
-	entry_point main_fp
-    target ps_3_0
-}
-*/
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
-{
-    source OWDepthFP.glsl
+	gl_Position = mul(worldViewProj, vertex);
+	positionWS = mul(world, vertex).xyz;
+	vNormal = normal;
+	viewDirection = positionWS - cameraPosition.xyz;
+	olightDirection = lightDirection;
+	vec3 T = tangent;
+	vec3 B = cross(tangent, normal);
+	vec3 N = normal;
+	mat3 TBN = mat3(T, B, N);
+
+	mat3 objectToTangentSpace;
+	objectToTangentSpace[0] = tangent;
+	objectToTangentSpace[1] = cross(tangent, normal);
+	objectToTangentSpace[2] = normal;
+	lightDirectionTS = mul(TBN, lightDirection);
+	viewDirectionTS = mul(TBN, viewDirection);
 }
 
