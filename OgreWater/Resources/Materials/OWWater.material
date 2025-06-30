@@ -67,10 +67,11 @@ material OgreWater/Water/Above
 				tex_address_mode mirror
             }
 
-			texture_unit
-			{
-				texture WaterNormal1.tga
-			}
+            texture_unit
+            {
+		texture WaterNormal1.tga
+#                tex_address_mode clamped
+            }
         }
     }
 }

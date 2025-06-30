@@ -22,6 +22,7 @@ THE SOFTWARE.
 
 OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 #include <OgreUnifiedShader.h>
+// precision highp float;
 
 SAMPLER2D(reflectionTexture, 0);
 SAMPLER2D(refractionTexture, 1);
@@ -39,8 +40,8 @@ uniform vec4 materialVariables;
 
 MAIN_PARAMETERS
 // IN(vec4 screenPos, VPOS)
-IN(vec3 normal, NORMAL)
-IN(vec3 positionWS, TEXCOORD0)
+IN(vec3 vNormal, NORMAL)
+IN(highp vec3 positionWS, TEXCOORD0)
 IN(vec3 viewDirection, TEXCOORD1)
 IN(vec3 viewDirectionTS, TEXCOORD2)
 IN(vec3 olightDirection, TEXCOORD3)
@@ -61,12 +62,16 @@ MAIN_DECLARATION
 
 	// Sample and blend normals
 	vec2 texCoord = 0.001 * positionWS.xz;
-	vec3 normal = vec3(0.0);
+//	vec2 texCoord = (vec2(sin(positionWS.x * 0.0001), -sin(positionWS.z * 0.0001)) * 0.5 + 1.0);
+	highp vec3 normal = vNormal;
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.x, texCoord.y - 5.0 * time)).rgb - 1.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.y, 1.0 - texCoord.x - 5.0 * time)).rgb - 1.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(1.0 - texCoord.x, 1.0 - texCoord.y - 5.0 * time)).rgb - 1.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(1.0 - texCoord.y, texCoord.x - 5.0 * time)).rgb - 1.0);
 	normal = normalize(normal);
+#ifndef OGRE_HLSL
+	screenUV.y = 1.0 - screenUV.y;
+#endif
 
 	// Depth calculations
 	float reflectionDepth = texture2D(reflectionDepthTexture, screenUV).r - length(positionWS - cameraPosition.xyz);
@@ -75,7 +80,11 @@ MAIN_DECLARATION
 	float refractionDepth = texture2D(refractionDepthTexture, screenUV).r - length(positionWS - cameraPosition.xyz);
 	refractionDepth = (refractionDepth <= 0.0 || refractionDepth > 500.0) ? 500.0 : refractionDepth;
 
+
 	// Distorted texture lookups
+#ifndef OGRE_HLSL
+	normal.y = -normal.y;
+#endif
 	vec2 reflectionTexCoord = screenUV + (normal.xy * reflectionDepth * materialVariables.x) / length(positionWS - cameraPosition.xyz);
 	vec4 reflectionColor = texture2D(reflectionTexture, reflectionTexCoord);
 	if (reflectionColor.a == 0.0) {
@@ -101,10 +110,9 @@ MAIN_DECLARATION
 	}
 
 	// Fresnel calculations
-	float phi1, sinPhi2, phi2;
+	float phi1 = 0.0, sinPhi2 = 0.0, phi2 = 0.0;
 	if (aboveSurface) {
 		phi1 = acos(dot(-normalizedViewDirection, normal));
-		sinPhi2 = 1.0f;
 		phi2 = asin((1.0/1.33) * sin(phi1));
 	} else {
 		phi1 = acos(dot(-normalizedViewDirection, -normal));
