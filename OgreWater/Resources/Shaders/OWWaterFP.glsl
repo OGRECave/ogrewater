@@ -30,7 +30,7 @@ SAMPLER2D(refractionDepthTexture, 3);
 SAMPLER2D(normalTexture, 4);
 
 OGRE_UNIFORMS(
-uniform mediump vec4 cameraPosition;
+uniform vec4 cameraPosition;
 uniform vec4 viewportSize;
 uniform float time;
 uniform vec4 waterFogColor;
@@ -39,7 +39,7 @@ uniform vec4 materialVariables;
 
 MAIN_PARAMETERS
 // IN(vec4 screenPos, VPOS)
-IN(vec3 normal, NORMAL)
+IN(vec3 vsnormal, NORMAL)
 IN(vec3 positionWS, TEXCOORD0)
 IN(vec3 viewDirection, TEXCOORD1)
 IN(vec3 viewDirectionTS, TEXCOORD2)
@@ -61,7 +61,7 @@ MAIN_DECLARATION
 
 	// Sample and blend normals
 	vec2 texCoord = 0.001 * positionWS.xz;
-	vec3 normal = vec3(0.0);
+	vec3 normal = vec3_splat(0.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.x, texCoord.y - 5.0 * time)).rgb - 1.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.y, 1.0 - texCoord.x - 5.0 * time)).rgb - 1.0);
 	normal += normalize(2.0 * texture2D(normalTexture, vec2(1.0 - texCoord.x, 1.0 - texCoord.y - 5.0 * time)).rgb - 1.0);
@@ -130,5 +130,5 @@ MAIN_DECLARATION
 		reflectionColor = mix(_waterFogColor, reflectionColor, f);
 	}
 
-	gl_FragColor = R * reflectionColor + T * refractionColor + specular * vec4(1.0);
+	gl_FragColor = R * reflectionColor + T * refractionColor + specular * vec4_splat(1.0);
 }

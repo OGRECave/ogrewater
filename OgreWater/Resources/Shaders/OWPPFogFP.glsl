@@ -36,9 +36,9 @@ IN(vec2 vTexCoord, TEXCOORD0)
 MAIN_DECLARATION
 {
 	// Sample textures
-	float depth = texture(SceneDepthTexture, vTexCoord).r;
-	vec3 sceneColor = texture(Scene, vTexCoord).rgb;
-	vec3 blurredColor = texture(RT, vTexCoord).rgb;
+	float depth = texture2D(SceneDepthTexture, vTexCoord).r;
+	vec3 sceneColor = texture2D(Scene, vTexCoord).rgb;
+	vec3 blurredColor = texture2D(RT, vTexCoord).rgb;
 
 	// Fog and blur calculations
 	float f = min(exp(-pow(depth * materialVariables.z, 2.0)), 0.5);

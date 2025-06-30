@@ -20,6 +20,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+vertex_program OgreWater/Caustics/Vertex hlsl glsl glsles glslang
+{
+    source OWCausticsVP.glsl
+    target vs_3_0
+}
+
+fragment_program OgreWater/Caustics/Fragment hlsl glsl glsles glslang
+{
+    source OWCausticsFP.glsl
+    target ps_3_0
+}
+
 material OgreWater/Caustics
 {
     technique

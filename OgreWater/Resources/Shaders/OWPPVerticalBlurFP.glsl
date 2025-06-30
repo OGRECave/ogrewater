@@ -29,7 +29,12 @@ OGRE_UNIFORMS(
 uniform vec4 viewportSize;
 )
 
-const float gaussianWeights[11] = float[](
+STATIC float gaussianWeights[11] = 
+#ifdef OGRE_HLSL
+{
+#else
+float[](
+#endif
     0.01222447,
     0.02783468,
     0.06559061,
@@ -41,19 +46,23 @@ const float gaussianWeights[11] = float[](
     0.06559061,
     0.02783468,
     0.01222447
+#ifdef OGRE_HLSL
+};
+#else
 );
+#endif
 
 MAIN_PARAMETERS
 IN(vec2 vTexCoord, TEXCOORD0)
 
 MAIN_DECLARATION
 {
-	vec3 blurSum = vec3(0.0);
+	vec3 blurSum = vec3_splat(0.0);
 	float texelOffset = viewportSize.x; // Horizontal blur
 	for (int i = 0; i < 11; ++i) {
 		float weight = gaussianWeights[i];
 		float offset = float(i - 5) * texelOffset;
-		blurSum += weight * texture(RT, vec2(vTexCoord.x + offset, vTexCoord.y)).rgb;
+		blurSum += weight * texture2D(RT, vec2(vTexCoord.x, vTexCoord.y + offset)).rgb;
 	}
 	gl_FragColor = vec4(blurSum, 1.0);
 }

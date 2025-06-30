@@ -20,6 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+vertex_program OgreWater/PostProcessingFog/Vertex hlsl glsl glsles glslang
+{
+	source OWPPEffectVP.glsl
+}
+
+fragment_program OgreWater/PostProcessingFog/Fragment hlsl glsl glsles glslang
+{
+	source OWPPFogFP.glsl
+}
+
 material OgreWater/PostProcessingFog
 {
 	technique

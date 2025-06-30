@@ -33,6 +33,8 @@ IN(vec3 positionWS, TEXCOORD1)
 MAIN_DECLARATION
 {
 	float depth = length(positionWS - cameraPosition);
-	float alpha = texture(tex, vtexCoord).a;
-	gl_FragColor = vec4(depth, 0.0, 0.0, alpha);
+	float alpha = texture2D(tex, vtexCoord).a;
+	if(alpha < 0.5)
+		discard;
+	gl_FragColor = vec4(depth, 0.0, 0.0, 1.0);
 }

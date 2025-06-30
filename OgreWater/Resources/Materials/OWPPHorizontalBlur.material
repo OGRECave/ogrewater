@@ -20,6 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+vertex_program OgreWater/PostProcessingHorizontalBlur/Vertex hlsl glsl glsles glslang
+{
+    source OWPPEffectVP.glsl
+}
+
+fragment_program OgreWater/PostProcessingHorizontalBlur/Fragment hlsl glsl glsles glslang
+{
+    source OWPPHorizontalBlurFP.glsl
+}
+
 material OgreWater/PostProcessingHorizontalBlur
 {
 	technique

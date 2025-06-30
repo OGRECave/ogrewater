@@ -22,16 +22,11 @@ THE SOFTWARE.
 
 #include <OgreUnifiedShader.h>
 
-SAMPLER2D(reflectionTexture, 0);
-SAMPLER2D( refractionTexture, 1);
-SAMPLER2D( normalTexture, 2);
 OGRE_UNIFORMS(
 uniform vec3 cameraPosition;
 )
 MAIN_PARAMETERS
-IN(vec4 position, POSITION)
 IN(vec3 positionWS, TEXCOORD0)
-/* OUT(vec4 depth, COLOR) */
 MAIN_DECLARATION
 {
 	vec4 depth = vec4(length(positionWS - cameraPosition), 0.0, 0.0, 1.0);

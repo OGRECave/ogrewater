@@ -23,45 +23,19 @@ THE SOFTWARE.
 OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 #include <OgreUnifiedShader.h>
 
-SAMPLER2D(RT, 0);
-
 OGRE_UNIFORMS(
-uniform vec4 viewportSize;
+uniform mat4 worldViewProj;
 )
-STATIC float gaussianWeights[11] = 
-#ifdef OGRE_HLSL
-{
-#else
-float[](
-#endif
-    0.01222447,
-    0.02783468,
-    0.06559061,
-    0.12097757,
-    0.17466632,
-    0.19741265,
-    0.17466632,
-    0.12097757,
-    0.06559061,
-    0.02783468,
-    0.01222447
-#ifdef OGRE_HLSL
-};
-#else
-);
-#endif
 MAIN_PARAMETERS
-IN(vec2 vTexCoord, TEXCOORD0)
+IN(vec4 position, POSITION)
+OUT(vec2 vTexCoord, TEXCOORD0)
 MAIN_DECLARATION
 {
-    vec3 blurColor = vec3_splat(0.0);
-    
-    // Horizontal Gaussian blur
-    for (int i = 0; i < 11; ++i) {
-        float offset = float(i - 5) * viewportSize.x;
-        blurColor += gaussianWeights[i] * texture2D(RT, vec2(vTexCoord.x + offset, vTexCoord.y)).rgb;
-    }
+	// Transform position and flip Y-coordinate for OpenGL texture space
+	gl_Position = mul(worldViewProj, position);
 
-    gl_FragColor = vec4(blurColor, 1.0);
+	// Convert to normalized device coordinates [-1, 1] then to texture space [0, 1]
+	// vTexCoord = (position.xy * vec2(1.0, -1.0) + 1.0) * 0.5;
+	vTexCoord = (sign(position.xy) * vec2(1.0, -1.0) + 1.0) * 0.5;
 }
 

@@ -20,6 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+vertex_program OgreWater/WaterDustDepth/Vertex hlsl glsl glsles glslang
+{
+    source OWWaterDustDepthVP.glsl
+}
+
+fragment_program OgreWater/WaterDustDepth/Fragment hlsl glsl glsles glslang
+{
+    source OWWaterDustDepthFP.glsl
+}
+
 material OgreWater/WaterDustDepth
 {
     technique

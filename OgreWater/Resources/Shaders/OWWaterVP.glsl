@@ -26,7 +26,7 @@ OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 OGRE_UNIFORMS(
 uniform mat4 world;
 uniform mat4 worldViewProj;
-uniform mediump vec4 cameraPosition;
+uniform vec4 cameraPosition;
 uniform vec3 lightDirection;
 )
 MAIN_PARAMETERS
@@ -45,17 +45,13 @@ MAIN_DECLARATION
 	gl_Position = mul(worldViewProj, vertex);
 	positionWS = mul(world, vertex).xyz;
 	vNormal = normal;
-	viewDirection = positionWS - cameraPosition.xyz;
+	viewDirection = vertex.xyz - cameraPosition.xyz;
 	olightDirection = lightDirection;
 	vec3 T = tangent;
 	vec3 B = cross(tangent, normal);
 	vec3 N = normal;
-	mat3 TBN = mat3(T, B, N);
+	mat3 TBN = mtxFromRows(T, B, N);
 
-	mat3 objectToTangentSpace;
-	objectToTangentSpace[0] = tangent;
-	objectToTangentSpace[1] = cross(tangent, normal);
-	objectToTangentSpace[2] = normal;
 	lightDirectionTS = mul(TBN, lightDirection);
 	viewDirectionTS = mul(TBN, viewDirection);
 }

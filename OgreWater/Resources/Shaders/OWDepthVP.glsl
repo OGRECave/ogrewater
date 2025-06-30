@@ -29,14 +29,11 @@ OGRE_UNIFORMS(
 )
 
 MAIN_PARAMETERS
-IN(vec4 vertex, POSITION);
-OUT(vec4 position, POSITION);
-OUT(vec3 positionWS, TEXCOORD0);
-
+IN(vec4 vertex, POSITION)
+OUT(vec3 positionWS, TEXCOORD0)
 MAIN_DECLARATION
 {
-	position = mul(worldViewProj, vertex);
-	positionWS = mul(world, position).xyz;
-	gl_Position = position;
+	gl_Position = mul(worldViewProj, vertex);
+	positionWS = mul(world, vertex).xyz;
 }
 

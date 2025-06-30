@@ -32,9 +32,9 @@ uniform vec4 waterData; // x: waterHeight, y: waterDataY (scale/threshold)
 const float PI = 3.1415926535897932384626433832795;
 
 MAIN_PARAMETERS
-IN(vec3 vNormal, NORMAL);
-IN(vec3 vPositionWS, TEXCOORD0);
-IN(vec3 vLightDirection, TEXCOORD1);
+IN(vec3 vNormal, NORMAL)
+IN(vec3 vPositionWS, TEXCOORD0)
+IN(vec3 vLightDirection, TEXCOORD1)
 MAIN_DECLARATION
 {
 	float waterHeight = waterData.x - vPositionWS.y;
@@ -49,11 +49,11 @@ MAIN_DECLARATION
 	vec2 texCoord = 0.001 * (vPositionWS.xz + ((waterHeight / t) * (-vLightDirection) - waterHeight * vec3(0.0, 1.0, 0.0)).xz);
 
 	// Sample and blend normals (4 samples with animation)
-	vec3 normal = vec3(0.0);
-	normal += normalize(2.0 * texture(normalTexture, vec2(texCoord.x, texCoord.y - 5.0 * time)).rgb - 1.0);
-	normal += normalize(2.0 * texture(normalTexture, vec2(texCoord.y, 1.0 - texCoord.x - 5.0 * time)).rgb - 1.0);
-	normal += normalize(2.0 * texture(normalTexture, vec2(1.0 - texCoord.x, 1.0 - texCoord.y - 5.0 * time)).rgb - 1.0);
-	normal += normalize(2.0 * texture(normalTexture, vec2(1.0 - texCoord.y, texCoord.x - 5.0 * time)).rgb - 1.0);
+	vec3 normal = vec3_splat(0.0);
+	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.x, texCoord.y - 5.0 * time)).rgb - 1.0);
+	normal += normalize(2.0 * texture2D(normalTexture, vec2(texCoord.y, 1.0 - texCoord.x - 5.0 * time)).rgb - 1.0);
+	normal += normalize(2.0 * texture2D(normalTexture, vec2(1.0 - texCoord.x, 1.0 - texCoord.y - 5.0 * time)).rgb - 1.0);
+	normal += normalize(2.0 * texture2D(normalTexture, vec2(1.0 - texCoord.y, texCoord.x - 5.0 * time)).rgb - 1.0);
 	normal.z *= 0.1; // Reduce z-component influence
 	normal = normalize(normal);
 
