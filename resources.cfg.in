@@ -1,6 +1,6 @@
 [OgreInternal]
 FileSystem=@OGRE_MEDIA_DIR@/Main
-FileSystem=@OGRE_MEDIA_DIR@/RTShaderLib/GLSL
+FileSystem=@OGRE_MEDIA_DIR@/RTShaderLib
 FileSystem=@OGRE_MEDIA_DIR@/Terrain/
 
 [General]
