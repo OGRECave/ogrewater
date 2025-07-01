@@ -34,7 +34,7 @@ IN(vec4 vertex, POSITION)
 IN(vec3 normal, NORMAL)
 IN(vec3 tangent, TANGENT)
 OUT(vec3 vNormal, NORMAL)
-OUT(highp vec3 positionWS, TEXCOORD0)
+OUT(f32vec3 positionWS, TEXCOORD0)
 OUT(vec3 viewDirection, TEXCOORD1)
 OUT(vec3 viewDirectionTS, TEXCOORD2)
 OUT(vec3 olightDirection, TEXCOORD3)
@@ -50,7 +50,7 @@ MAIN_DECLARATION
 	vec3 T = tangent;
 	vec3 B = cross(tangent, normal);
 	vec3 N = normal;
-	mat3 TBN = mat3(T, B, N);
+	mat3 TBN = mtxFromRows(T, B, N);
 
 	mat3 objectToTangentSpace;
 	objectToTangentSpace[0] = tangent;

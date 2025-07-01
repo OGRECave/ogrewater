@@ -41,7 +41,7 @@ uniform vec4 materialVariables;
 MAIN_PARAMETERS
 // IN(vec4 screenPos, VPOS)
 IN(vec3 vNormal, NORMAL)
-IN(highp vec3 positionWS, TEXCOORD0)
+IN(f32vec3 positionWS, TEXCOORD0)
 IN(vec3 viewDirection, TEXCOORD1)
 IN(vec3 viewDirectionTS, TEXCOORD2)
 IN(vec3 olightDirection, TEXCOORD3)
