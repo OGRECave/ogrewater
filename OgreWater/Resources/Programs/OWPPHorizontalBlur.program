@@ -36,12 +36,12 @@ fragment_program OgreWater/PostProcessingHorizontalBlur/Fragment hlsl
 }
 */
 
-vertex_program OgreWater/PostProcessingHorizontalBlur/Vertex hlsl glsl glsles
+vertex_program OgreWater/PostProcessingHorizontalBlur/Vertex hlsl glsl glsles glslang
 {
     source OWPPHorizontalBlurVP.glsl
 }
 
-fragment_program OgreWater/PostProcessingHorizontalBlur/Fragment hlsl glsl glsles
+fragment_program OgreWater/PostProcessingHorizontalBlur/Fragment hlsl glsl glsles glslang
 {
     source OWPPHorizontalBlurFP.glsl
 }

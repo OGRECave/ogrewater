@@ -27,7 +27,7 @@ THE SOFTWARE.
     target vs_3_0
 }
 */
-vertex_program OgreWater/Depth/Vertex hlsl glsl glsles
+vertex_program OgreWater/Depth/Vertex hlsl glsl glsles glslang
 {
     source OWDepthVP.glsl
 }
@@ -40,7 +40,7 @@ fragment_program OgreWater/Depth/Fragment hlsl
     target ps_3_0
 }
 */
-fragment_program OgreWater/Depth/Fragment hlsl glsl glsles
+fragment_program OgreWater/Depth/Fragment hlsl glsl glsles glslang
 {
     source OWDepthFP.glsl
 }

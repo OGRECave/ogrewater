@@ -36,12 +36,12 @@ fragment_program OgreWater/Caustics/Fragment hlsl
 }
 */
 
-vertex_program OgreWater/Caustics/Vertex hlsl glsl glsles
+vertex_program OgreWater/Caustics/Vertex hlsl glsl glsles glslang
 {
     source OWCausticsVP.glsl
 }
 
-fragment_program OgreWater/Caustics/Fragment hlsl glsl glsles
+fragment_program OgreWater/Caustics/Fragment hlsl glsl glsles glslang
 {
     source OWCausticsFP.glsl
 }

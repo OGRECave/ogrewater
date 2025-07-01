@@ -70,7 +70,6 @@ material OgreWater/Water/Above
             texture_unit
             {
 		texture WaterNormal1.tga
-#                tex_address_mode clamped
             }
         }
     }

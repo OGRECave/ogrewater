@@ -35,11 +35,11 @@ fragment_program OgreWater/Water/Fragment hlsl
     target ps_3_0
 }
 */
-vertex_program OgreWater/Water/Vertex hlsl glsl glsles
+vertex_program OgreWater/Water/Vertex hlsl glsl glsles glslang
 {
     source OWWaterVP.glsl
 }
-fragment_program OgreWater/Water/Fragment hlsl glsl glsles
+fragment_program OgreWater/Water/Fragment hlsl glsl glsles glslang
 {
     source OWWaterFP.glsl
 }
