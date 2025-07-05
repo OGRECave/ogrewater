@@ -26,7 +26,7 @@ OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 OGRE_UNIFORMS(
 uniform mat4 world;
 uniform mat4 worldViewProj;
-uniform f32vec4 cameraPosition;
+uniform vec4 cameraPositionOS;
 uniform vec3 lightDirection;
 )
 MAIN_PARAMETERS
@@ -45,7 +45,7 @@ MAIN_DECLARATION
 	gl_Position = mul(worldViewProj, vertex);
 	positionWS = mul(world, vertex).xyz;
 	vNormal = normal;
-	viewDirection = vertex.xyz - cameraPosition.xyz;
+	viewDirection = vertex.xyz - cameraPositionOS.xyz;
 	olightDirection = lightDirection;
 	vec3 T = tangent;
 	vec3 B = cross(tangent, normal);

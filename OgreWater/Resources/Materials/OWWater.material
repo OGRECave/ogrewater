@@ -41,7 +41,7 @@ material OgreWater/Water/Above
 			{
 				param_named_auto world world_matrix
 				param_named_auto worldViewProj worldviewproj_matrix
-				param_named_auto cameraPosition camera_position_object_space
+				param_named_auto cameraPositionOS camera_position_object_space
 				param_named_auto lightDirection light_direction_object_space 0
 			}
 
@@ -104,7 +104,7 @@ material OgreWater/Water/Below
 			{
 				param_named_auto world world_matrix
 				param_named_auto worldViewProj worldviewproj_matrix
-				param_named_auto cameraPosition camera_position_object_space
+				param_named_auto cameraPositionOS camera_position_object_space
 				param_named_auto lightDirection light_direction_object_space 0
 			}
 
