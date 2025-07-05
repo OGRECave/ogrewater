@@ -56,7 +56,8 @@ MAIN_DECLARATION
 	vec2 screenUV = (gl_FragCoord.xy + 0.5) / viewportSize.xy;
 
 #if !defined(OGRE_HLSL) && !defined(VULKAN)
-	screenUV.y = 1.0 - screenUV.y;
+	if(aboveSurface)
+		screenUV.y = 1.0 - screenUV.y;
 #endif
 
 	vec3 normalizedViewDirection = normalize(viewDirection);
