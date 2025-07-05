@@ -30,7 +30,7 @@ SAMPLER2D(refractionDepthTexture, 3);
 SAMPLER2D(normalTexture, 4);
 
 OGRE_UNIFORMS(
-uniform vec4 cameraPosition;
+uniform f32vec4 cameraPosition;
 uniform vec4 viewportSize;
 uniform float time;
 uniform vec4 waterFogColor;
@@ -38,7 +38,6 @@ uniform vec4 materialVariables;
 )
 
 MAIN_PARAMETERS
-// IN(vec4 screenPos, VPOS)
 IN(vec3 vsnormal, NORMAL)
 IN(vec3 positionWS, TEXCOORD0)
 IN(vec3 viewDirection, TEXCOORD1)
@@ -55,6 +54,10 @@ MAIN_DECLARATION
 
 	// Screen-space UVs (GLSL's gl_FragCoord is already in window coords)
 	vec2 screenUV = (gl_FragCoord.xy + 0.5) / viewportSize.xy;
+
+#if !defined(OGRE_HLSL) && !defined(VULKAN)
+	screenUV.y = 1.0 - screenUV.y;
+#endif
 
 	vec3 normalizedViewDirection = normalize(viewDirection);
 	vec3 normalizedViewDirectionTS = normalize(viewDirectionTS);

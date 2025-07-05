@@ -30,7 +30,7 @@ OGRE_UNIFORMS(
 
 MAIN_PARAMETERS
 IN(vec4 vertex, POSITION)
-OUT(vec3 positionWS, TEXCOORD0)
+OUT(f32vec3 positionWS, TEXCOORD0)
 MAIN_DECLARATION
 {
 	gl_Position = mul(worldViewProj, vertex);

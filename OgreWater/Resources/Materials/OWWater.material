@@ -52,6 +52,12 @@ material OgreWater/Water/Above
 				param_named_auto time time 0.005
 				param_named_auto waterFogColor custom 0
 				param_named_auto materialVariables custom 1
+
+                param_named reflectionTexture int 0
+                param_named refractionTexture int 1
+                param_named reflectionDepthTexture int 2
+                param_named refractionDepthTexture int 3
+                param_named normalTexture int 4
 			}
 
             texture_unit
@@ -109,6 +115,12 @@ material OgreWater/Water/Below
 				param_named_auto time time 0.005
 				param_named_auto waterFogColor custom 0
 				param_named_auto materialVariables custom 1
+
+                param_named reflectionTexture int 0
+                param_named refractionTexture int 1
+                param_named reflectionDepthTexture int 2
+                param_named refractionDepthTexture int 3
+                param_named normalTexture int 4
 			}
 
             texture_unit

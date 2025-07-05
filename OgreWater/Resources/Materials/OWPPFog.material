@@ -46,6 +46,9 @@ material OgreWater/PostProcessingFog
 
 			fragment_program_ref OgreWater/PostProcessingFog/Fragment
 			{
+				param_named Scene int 0
+				param_named RT int 1
+				param_named SceneDepthTexture int 2
 			}
 
 			texture_unit Scene

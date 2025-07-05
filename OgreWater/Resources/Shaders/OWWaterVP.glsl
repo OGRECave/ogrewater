@@ -26,7 +26,7 @@ OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 OGRE_UNIFORMS(
 uniform mat4 world;
 uniform mat4 worldViewProj;
-uniform vec4 cameraPosition;
+uniform f32vec4 cameraPosition;
 uniform vec3 lightDirection;
 )
 MAIN_PARAMETERS

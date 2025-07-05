@@ -19,14 +19,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
+OGRE_NATIVE_GLSL_VERSION_DIRECTIVE
 #include <OgreUnifiedShader.h>
 
 OGRE_UNIFORMS(
-uniform vec3 cameraPosition;
+uniform f32vec3 cameraPosition;
 )
 MAIN_PARAMETERS
-IN(vec3 positionWS, TEXCOORD0)
+IN(f32vec3 positionWS, TEXCOORD0)
 MAIN_DECLARATION
 {
 	vec4 depth = vec4(length(positionWS - cameraPosition), 0.0, 0.0, 1.0);
